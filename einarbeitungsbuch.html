@@ -1,0 +1,2275 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Einarbeitungsbuch · tecis Team Dao</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue:#003D7C;--blue2:#1a5fa8;--cyan:#00A8E0;
+  --pink:#0a2d5e;--pink2:#1a4a8a;
+  --dark:#0a2d5e;--text:#1e2d3d;--muted:#607080;
+  --border:#dde3ea;--bg:#f7f8fa;--white:#fff;
+  --green:#1a9e5e;--orange:#e05a00;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+
+/* ── TOP BAR ── */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;background:var(--dark);display:flex;align-items:center;padding:0 28px;gap:14px;box-shadow:0 1px 8px rgba(0,0,0,.25)}
+.tb-logo{display:flex;align-items:center;gap:9px}
+.tb-div{width:1px;height:22px;background:rgba(255,255,255,.18)}
+.tb-title{font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:2px}
+.tb-sub{font-size:9px;color:var(--pink2);letter-spacing:3px;text-transform:uppercase}
+#tb-chapter{margin-left:auto;font-size:11px;color:rgba(255,255,255,.45);font-weight:500}
+#tb-nav{display:flex;align-items:center;gap:6px;margin-left:16px}
+.tb-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:6px;padding:5px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s}
+.tb-btn:hover{background:rgba(255,255,255,.14)}
+.tb-btn:disabled{opacity:.3;cursor:default}
+.tb-progress{font-size:10px;color:rgba(255,255,255,.35);min-width:44px;text-align:center}
+#hamburger{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;gap:4px;padding:5px;margin-left:10px}
+#hamburger span{display:block;width:20px;height:2px;background:#fff;border-radius:1px}
+
+/* ── SIDEBAR ── */
+#sidebar{position:fixed;top:52px;left:0;bottom:0;width:258px;background:var(--white);border-right:1px solid var(--border);overflow-y:auto;z-index:100;transition:transform .28s}
+#sidebar::-webkit-scrollbar{width:4px}
+#sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.sb-section{padding:18px 22px 6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--muted)}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 22px;cursor:pointer;transition:background .15s;border-left:3px solid transparent;font-size:13px;color:var(--muted)}
+.sb-item:hover{background:var(--bg);color:var(--text)}
+.sb-item.active{border-left-color:var(--blue);background:#eef4ff;color:var(--blue);font-weight:600}
+.sb-num{font-family:'Bebas Neue',sans-serif;font-size:15px;color:inherit;min-width:20px}
+.sb-line{height:1px;background:var(--border);margin:8px 22px}
+
+/* ── MAIN ── */
+#main{margin-left:258px;margin-top:52px;min-height:calc(100vh - 52px);padding:48px 64px 100px}
+.chapter{display:none;max-width:760px}
+.chapter.visible{display:block;animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TYPOGRAPHY ── */
+.chap-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:var(--pink);margin-bottom:8px}
+.chap-title{font-family:'DM Serif Display',serif;font-size:48px;line-height:1.1;color:var(--dark);margin-bottom:12px}
+.chap-lead{font-size:16px;color:var(--muted);line-height:1.7;margin-bottom:32px;border-bottom:1px solid var(--border);padding-bottom:24px}
+h2{font-family:'DM Serif Display',serif;font-size:28px;color:var(--dark);margin:32px 0 14px}
+h3{font-size:17px;font-weight:700;color:var(--dark);margin:22px 0 10px}
+p{font-size:14px;line-height:1.8;color:#354555;margin-bottom:12px}
+p:last-child{margin-bottom:0}
+ul,ol{margin:10px 0 12px 20px}
+li{font-size:14px;line-height:1.75;color:#354555;margin-bottom:3px}
+strong{color:var(--dark);font-weight:700}
+
+/* ── CARDS / BOXES ── */
+.card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:22px 26px;margin:18px 0}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.card-title::before{content:'';display:block;width:3px;height:12px;background:var(--pink);border-radius:2px;flex-shrink:0}
+.note{background:#eef4ff;border-left:4px solid var(--blue);border-radius:0 8px 8px 0;padding:13px 17px;margin:14px 0;font-size:14px;line-height:1.65}
+.note strong{color:var(--blue)}
+.note-pink{background:#fff0f5;border-left-color:var(--pink)}
+.note-pink strong{color:var(--pink)}
+.note-green{background:#edfaf3;border-left-color:var(--green)}
+.note-green strong{color:var(--green)}
+.note-orange{background:#fff5ee;border-left-color:var(--orange)}
+.quote{background:var(--dark);border-radius:10px;padding:24px 28px;margin:20px 0;position:relative}
+.quote::before{content:'"';font-family:'DM Serif Display',serif;font-size:80px;color:rgba(255,255,255,.08);position:absolute;top:-8px;left:18px;line-height:1}
+.quote p{color:rgba(255,255,255,.85);font-style:italic;font-size:15px;position:relative;z-index:1}
+.quote-source{font-size:11px;color:var(--pink2);text-transform:uppercase;letter-spacing:2px;margin-top:8px;font-weight:700}
+
+/* ── GRIDS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0}
+.gc{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px 16px}
+.gc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
+.gc-val{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--blue);line-height:1.1;margin-bottom:4px}
+.gc-text{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* ── STEPS ── */
+.steps{margin:14px 0}
+.step{display:flex;gap:14px;padding:12px 0;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;left:14px;top:38px;bottom:0;width:2px;background:var(--border)}
+.step-n{width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1}
+.step-b{flex:1;padding-top:5px}
+.step-t{font-weight:700;font-size:14px;color:var(--dark);margin-bottom:3px}
+.step-d{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ── TABLE ── */
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+th{background:var(--blue);color:#fff;padding:9px 13px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.5px}
+th:first-child{border-radius:6px 0 0 0}th:last-child{border-radius:0 6px 0 0}
+td{padding:9px 13px;border-bottom:1px solid var(--border);color:var(--text);background:var(--white)}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:#fafbfc}
+
+/* ── ACCORDION ── */
+.acc{border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.acc-h{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;background:var(--white);transition:background .15s}
+.acc-h:hover{background:var(--bg)}
+.acc.open .acc-h{background:var(--blue);color:#fff}
+.acc-num{width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.acc.open .acc-num{background:rgba(255,255,255,.15)}
+.acc-label{flex:1;font-weight:600;font-size:13px;color:var(--text)}
+.acc.open .acc-label{color:#fff}
+.acc-sub{font-size:11px;color:var(--muted)}
+.acc.open .acc-sub{color:rgba(255,255,255,.65)}
+.acc-arr{color:var(--muted);transition:transform .25s;flex-shrink:0}
+.acc.open .acc-arr{transform:rotate(180deg);color:#fff}
+.acc-body{display:none;padding:18px 22px;border-top:1px solid var(--border)}
+.acc.open .acc-body{display:block}
+
+/* ── KONTAKTMODUS ── */
+.kf{display:flex;gap:12px;padding:12px 0;position:relative}
+.kf:not(:last-child)::after{content:'';position:absolute;left:15px;top:38px;bottom:0;width:2px;background:var(--border)}
+.kf-n{width:32px;height:32px;border-radius:50%;background:var(--dark);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1}
+.kf-b{flex:1;padding-top:5px}
+.kf-t{font-weight:700;font-size:14px;color:var(--dark);margin-bottom:3px}
+.kf-d{font-size:13px;color:var(--muted);margin-bottom:6px}
+.kf-script{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:0 6px 6px 0;padding:10px 14px;font-size:13px;color:var(--text);line-height:1.65;font-style:italic}
+
+/* ── CAREER TABLE ── */
+.career-row{display:grid;grid-template-columns:160px 1fr 80px;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.career-row:last-child{border-bottom:none}
+.career-row.hunter .cr-badge{background:#fff5ee;color:var(--orange);border:1px solid rgba(224,90,0,.2)}
+.career-row.pharma .cr-badge{background:#eef7ff;color:var(--blue);border:1px solid rgba(0,61,124,.2)}
+.cr-badge{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;display:inline-block;margin-bottom:6px}
+.cr-name{font-weight:700;font-size:14px;color:var(--dark)}
+.cr-desc{font-size:12px;color:var(--muted);margin-top:2px}
+.cr-prov{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--blue)}
+
+/* ── HAUS ── */
+.haus{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:16px 0}
+.haus-roof{background:var(--dark);color:#fff;padding:20px 26px;text-align:center}
+.haus-roof h3{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:4px;color:#fff}
+.haus-roof p{font-size:13px;opacity:.6;margin:0}
+.haus-cols{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border)}
+.haus-col{padding:18px 14px;text-align:center;border-right:1px solid var(--border);background:var(--white)}
+.haus-col:last-child{border-right:none}
+.haus-col-num{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--blue);line-height:1}
+.haus-col-title{font-weight:700;font-size:13px;color:var(--dark);margin:4px 0}
+.haus-col-text{font-size:12px;color:var(--muted);line-height:1.5}
+.haus-fund{background:var(--blue);padding:16px 26px}
+.haus-fund h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.6);margin-bottom:10px}
+.haus-fund-items{display:flex;flex-wrap:wrap;gap:7px}
+.haus-fund-item{background:rgba(255,255,255,.1);border-radius:5px;padding:4px 11px;font-size:12px;color:#fff;font-weight:500}
+
+/* ── DO / DONT ── */
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.do-box{border:1px solid #b7e6ce;border-radius:8px;padding:14px;background:#f0fbf5}
+.dont-box{border:1px solid #f5b8b8;border-radius:8px;padding:14px;background:#fdf3f3}
+.do-box h4{color:var(--green);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:700}
+.dont-box h4{color:#c0392b;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:700}
+.do-box li,.dont-box li{font-size:12px;line-height:1.65;padding-left:14px;position:relative;margin-bottom:2px;color:var(--text)}
+.do-box li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
+.dont-box li::before{content:'✗';position:absolute;left:0;color:#c0392b;font-weight:700}
+
+/* ── RECHNER ── */
+.rechner-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.r-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:5px;display:block}
+.r-input{width:100%;border:1px solid var(--border);border-radius:7px;padding:10px 13px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;background:var(--white);transition:border .2s}
+.r-input:focus{border-color:var(--blue)}
+.r-result{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px;background:var(--dark);border-radius:10px;padding:16px}
+.rr{text-align:center}
+.rr-v{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--pink2);line-height:1}
+.rr-l{font-size:10px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+
+/* ── PILLAR ── */
+.pillar-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.pillar{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px;border-top:4px solid var(--blue);position:relative;overflow:hidden}
+.pillar::after{content:attr(data-n);font-family:'Bebas Neue',sans-serif;font-size:56px;color:var(--border);position:absolute;bottom:-8px;right:10px;line-height:1}
+.pillar-t{font-weight:700;font-size:14px;color:var(--dark);margin-bottom:3px}
+.pillar-m{font-size:12px;font-style:italic;color:var(--pink);margin-bottom:7px}
+.pillar-d{font-size:13px;color:var(--muted);line-height:1.55}
+
+/* ── CHECKLIST ── */
+.cl-item{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.cl-item:last-child{border-bottom:none}
+.cl-check{width:18px;height:18px;border-radius:4px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .2s}
+.cl-check.done{background:var(--green);border-color:var(--green)}
+.cl-check.done::after{content:'✓';color:#fff;font-size:10px;font-weight:700}
+.cl-text{font-size:13px;color:var(--text);line-height:1.5}
+.cl-text.done{text-decoration:line-through;color:var(--muted)}
+.cl-prog-wrap{background:var(--border);border-radius:10px;height:5px;margin:10px 0 4px;overflow:hidden}
+.cl-prog{height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:10px;transition:width .35s}
+.cl-pct{font-size:11px;color:var(--muted);text-align:right;margin-bottom:8px}
+
+/* ── TOC ── */
+.toc-item{display:flex;align-items:center;gap:14px;padding:12px 16px;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .18s;background:var(--white);margin-bottom:7px}
+.toc-item:hover{border-color:var(--blue);background:#eef4ff}
+.toc-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--border);min-width:32px}
+.toc-info{flex:1}
+.toc-title{font-weight:700;font-size:14px;color:var(--dark)}
+.toc-sub{font-size:12px;color:var(--muted);margin-top:1px}
+.toc-arr{color:var(--muted);font-size:16px}
+
+/* ── TEXTAREA (Reflexion) ── */
+.reflex{width:100%;border:1px solid var(--border);border-radius:8px;padding:12px 15px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);resize:vertical;min-height:90px;outline:none;background:var(--white);line-height:1.6;transition:border .2s}
+.reflex:focus{border-color:var(--blue)}
+
+/* ── CHAPTER NAV ── */
+.chap-nav{display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border)}
+.chap-nav-btn{display:flex;align-items:center;gap:7px;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;color:var(--text);font-family:'DM Sans',sans-serif;transition:all .2s}
+.chap-nav-btn:hover:not(:disabled){border-color:var(--blue);color:var(--blue);background:#eef4ff}
+.chap-nav-btn:disabled{opacity:.3;cursor:default}
+.chap-nav-next{background:var(--blue);color:#fff;border-color:var(--blue)}
+.chap-nav-next:hover:not(:disabled){background:var(--blue2)!important;border-color:var(--blue2)!important;color:#fff!important}
+
+@media(max-width:900px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0;padding:28px 20px 80px}
+  .g2,.g3,.rechner-row,.r-result,.dd,.pillar-grid,.haus-cols,.toc-section{grid-template-columns:1fr}
+  .r-result{grid-template-columns:1fr 1fr}
+  .career-row{grid-template-columns:1fr}
+}
+</style></head>
+<body>
+
+<div id="topbar">
+  <div class="tb-logo">
+    <div><div class="tb-title">Einarbeitungsbuch</div><div class="tb-sub">Team Dao</div></div>
+  </div>
+  <div id="tb-chapter">Inhaltsverzeichnis</div>
+  <div id="tb-nav">
+    <button class="tb-btn" id="btn-prev" onclick="navChap(-1)" disabled>&#8592; Zurück</button>
+    <span class="tb-progress" id="tb-prog">1 / 23</span>
+    <button class="tb-btn" id="btn-next" onclick="navChap(1)">Weiter &#8594;</button>
+  </div>
+  <button id="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+</div>
+
+<nav id="sidebar">
+  <div class="sb-section">Inhaltsverzeichnis</div>
+  <div class="sb-item active" onclick="goTo(0)"><span class="sb-num">—</span>Inhaltsverzeichnis</div>
+  <div class="sb-line"></div>
+  <div class="sb-section">Einstieg</div>
+  <div class="sb-item" onclick="goTo(1)"><span class="sb-num">01</span>Willkommensbrief</div>
+  <div class="sb-item" onclick="goTo(2)"><span class="sb-num">02</span>Meine Vorstellung</div>
+  <div class="sb-item" onclick="goTo(3)"><span class="sb-num">03</span>Buchempfehlungen</div>
+  <div class="sb-item" onclick="goTo(4)"><span class="sb-num">04</span>Vision Board</div>
+  <div class="sb-item" onclick="goTo(5)"><span class="sb-num">05</span>Persönlichkeitsentwicklung</div>
+  <div class="sb-item" onclick="goTo(6)"><span class="sb-num">06</span>Unsere Standorte</div>
+  <div class="sb-item" onclick="goTo(7)"><span class="sb-num">07</span>Wichtige Termine</div>
+  <div class="sb-line"></div>
+  <div class="sb-section">Mindset &amp; Kultur</div>
+  <div class="sb-item" onclick="goTo(8)"><span class="sb-num">08</span>Erwartungshaltung</div>
+  <div class="sb-item" onclick="goTo(9)"><span class="sb-num">09</span>Was Selbstständigkeit bedeutet</div>
+  <div class="sb-item" onclick="goTo(10)"><span class="sb-num">10</span>Vision, Werte &amp; Mission</div>
+  <div class="sb-item" onclick="goTo(11)"><span class="sb-num">11</span>Kultur &amp; interne Standards</div>
+  <div class="sb-line"></div>
+  <div class="sb-section">Unternehmen &amp; System</div>
+  <div class="sb-item" onclick="goTo(12)"><span class="sb-num">12</span>Unternehmerbasics</div>
+  <div class="sb-item" onclick="goTo(13)"><span class="sb-num">13</span>Geschäftsplan</div>
+  <div class="sb-item" onclick="goTo(14)"><span class="sb-num">14</span>Systemeinrichtung</div>
+  <div class="sb-item" onclick="goTo(15)"><span class="sb-num">15</span>Das tecis-System</div>
+  <div class="sb-item" onclick="goTo(16)"><span class="sb-num">16</span>IHK §34d &amp; §34f</div>
+  <div class="sb-line"></div>
+  <div class="sb-section">Entwicklung &amp; Ziele</div>
+  <div class="sb-item" onclick="goTo(17)"><span class="sb-num">17</span>Performance &amp; Routinen</div>
+  <div class="sb-item" onclick="goTo(18)"><span class="sb-num">18</span>Benchmark nach 2 Jahren</div>
+  <div class="sb-item" onclick="goTo(19)"><span class="sb-num">19</span>Persönliche Zieldefinition</div>
+  <div class="sb-item" onclick="goTo(20)"><span class="sb-num">20</span>Compliance &amp; Haftung</div>
+  <div class="sb-line"></div>
+  <div class="sb-item" onclick="goTo(21)"><span class="sb-num">21</span>Abschlussworte</div>
+  <div class="sb-item" onclick="goTo(22)"><span class="sb-num">22</span>Notizen</div>
+</nav>
+
+<main id="main">
+<!-- ══ 0: TOC ══ -->
+<div class="chapter visible" id="ch-0">
+  <div class="chap-label">tecis · Team Dao · Wiesbaden &amp; Montabaur</div>
+  <div class="chap-title">Einarbeitungsbuch</div>
+  <div class="chap-lead">Herzlich willkommen. Dieses Buch begleitet dich durch deinen Start bei tecis. Lies es durch – Schritt für Schritt. Alles was du zu Beginn wissen musst, steht hier drin.</div>
+
+  <div class="g2" style="margin-bottom:20px">
+    <div class="card" style="border-top:3px solid var(--blue)">
+      <div class="card-title">Standort Wiesbaden (Hauptstandort)</div>
+      <p>Frankfurter Str. 8, 65189 Wiesbaden · Standortnummer 6661<br>Leitung: Thorsten Bold, Sebastian Staat, Navjot Singh &amp; Kim Hung Dao</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--cyan)">
+      <div class="card-title">Standort Montabaur</div>
+      <p>Wilhelm-Mangels-Str. 13–19, 56410 Montabaur · Standortnummer 5181<br>Leitung: Kim Hung Dao (zukünftig auch Tobias Blankenagel, Luca Böckling &amp; Patrick Vargas)</p>
+    </div>
+  </div>
+
+  <div class="toc-item" onclick="goTo(1)"><span class="toc-num">01</span><div class="toc-info"><div class="toc-title">Willkommensbrief</div><div class="toc-sub">Dein erster Tag, unsere Freude</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(2)"><span class="toc-num">02</span><div class="toc-info"><div class="toc-title">Meine Vorstellung</div><div class="toc-sub">Wer führt dich und warum – Kim Hung Dao persönlich</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(3)"><span class="toc-num">03</span><div class="toc-info"><div class="toc-title">Buchempfehlungen</div><div class="toc-sub">Die Quintessenz aus 11 Meisterwerken der Selbstentwicklung</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(4)"><span class="toc-num">04</span><div class="toc-info"><div class="toc-title">Vision Board (inkl. Anleitung)</div><div class="toc-sub">Dein WHY, AECdisc® und Vision Board verbunden</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(5)"><span class="toc-num">05</span><div class="toc-info"><div class="toc-title">Persönlichkeitsentwicklung</div><div class="toc-sub">Grundpfeiler, AECdisc®, WHY, Vision Board im Detail</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(6)"><span class="toc-num">06</span><div class="toc-info"><div class="toc-title">Unsere Standorte</div><div class="toc-sub">Montabaur &amp; Wiesbaden im Detail</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(7)"><span class="toc-num">07</span><div class="toc-info"><div class="toc-title">Wichtige Termine</div><div class="toc-sub">A&amp;O, Teammeeting, Wochenmeeting, Vertriebs- &amp; Fachausbildung, Nebenberuflertag</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(8)"><span class="toc-num">08</span><div class="toc-info"><div class="toc-title">Unsere Erwartungshaltung</div><div class="toc-sub">An zukünftige Unternehmer – 7 Grundsätze</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(9)"><span class="toc-num">09</span><div class="toc-info"><div class="toc-title">Was Selbstständigkeit bedeutet</div><div class="toc-sub">Freiheit, Verantwortung, Wachstum</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(10)"><span class="toc-num">10</span><div class="toc-info"><div class="toc-title">Vision, Werte &amp; Mission</div><div class="toc-sub">Für eine starke, chancengerechte Gesellschaft</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(11)"><span class="toc-num">11</span><div class="toc-info"><div class="toc-title">Kultur &amp; interne Standards</div><div class="toc-sub">Zusammenarbeit, Kleiderordnung, Kommunikation, Wettbewerb, Pflichten</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(12)"><span class="toc-num">12</span><div class="toc-info"><div class="toc-title">Unternehmerbasics</div><div class="toc-sub">tecis „Dein Start bei tecis"-Broschüre · VP-Vertrag, Gewerbe, Rentenversicherung, Steuern, Datenschutz</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(13)"><span class="toc-num">13</span><div class="toc-info"><div class="toc-title">Geschäftsplan</div><div class="toc-sub">Geschäftsmodell, Aufgabenprofile, Vergütung, Karrierestufen, Strukturaufbau</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(14)"><span class="toc-num">14</span><div class="toc-info"><div class="toc-title">Systemeinrichtung &amp; Arbeitsumfeld</div><div class="toc-sub">E-Mail, CRM, Apps, Reporting, Kalenderstruktur</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(15)"><span class="toc-num">15</span><div class="toc-info"><div class="toc-title">Das tecis-System</div><div class="toc-sub">Akquise &amp; Vertrieb, Beratung, Partner einstellen, Führung</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(16)"><span class="toc-num">16</span><div class="toc-info"><div class="toc-title">IHK §34d &amp; §34f GewO</div><div class="toc-sub">Struktur, Lernplan, Tipps &amp; Tricks</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(17)"><span class="toc-num">17</span><div class="toc-info"><div class="toc-title">Persönlichkeitsentwicklung &amp; Performance</div><div class="toc-sub">30-60-90 Tage Plan, KPIs, Wochenstruktur, Routinen, Energie</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(18)"><span class="toc-num">18</span><div class="toc-info"><div class="toc-title">Benchmark nach 2 Jahren</div><div class="toc-sub">Vertriebliche, fachliche &amp; persönliche Kompetenzen</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(19)"><span class="toc-num">19</span><div class="toc-info"><div class="toc-title">Persönliche Zieldefinition</div><div class="toc-sub">Workbook: Einkommen, Karriere, Team, Warum</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(20)"><span class="toc-num">20</span><div class="toc-info"><div class="toc-title">Compliance &amp; Haftung</div><div class="toc-sub">DSGVO, Haftungsgrundlagen, Verhaltensrichtlinien im Markt</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(21)"><span class="toc-num">21</span><div class="toc-info"><div class="toc-title">Abschlussworte</div><div class="toc-sub">Dein Weg beginnt jetzt</div></div><span class="toc-arr">→</span></div>
+  <div class="toc-item" onclick="goTo(22)"><span class="toc-num">22</span><div class="toc-info"><div class="toc-title">Notizen</div><div class="toc-sub">Dein persönlicher Platz für Gedanken</div></div><span class="toc-arr">→</span></div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" disabled>&#8592; Zurück</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 1 – Willkommen &#8594;</button>
+  </div>
+</div>
+
+<!-- ══ 1: WILLKOMMEN ══ -->
+<div class="chapter" id="ch-1">
+  <div class="chap-label">Kapitel 1 · Einstieg</div>
+  <div class="chap-title">Willkommen im Team Kim Dao</div>
+  <div class="chap-lead">Herzlich Willkommen im Team Kim Dao bei der tecis Finanzdienstleistung AG! Wir freuen uns sehr, dass du dich für diesen Weg entschieden hast und nun Teil unseres Teams bist.</div>
+
+  <p>Mit deiner Entscheidung, hier zu starten, hast du den ersten Schritt in eine spannende und zukunftsorientierte Karriere gemacht.</p>
+  <p>Unsere Branche bietet dir die Möglichkeit, nicht nur beruflich erfolgreich zu sein, sondern auch deine eigene Persönlichkeit zu entwickeln, deine Stärken zu entdecken und einen Beruf auszuüben, der für viele Menschen einen echten Unterschied macht. Dabei ist es uns wichtig, dass du dich von Anfang an willkommen fühlst, Orientierung bekommst und erkennst, dass du deine Zukunft aktiv selbst gestalten kannst.</p>
+
+  <h2>Ein Weg voller Chancen – und voller Freiheit</h2>
+  <p>Bei tecis und im Team Kim Dao wirst du von Beginn an Unterstützung erfahren – sei es durch deine Führungskraft, durch erfahrene Teammitglieder, durch Mentoren, die dich begleiten, oder durch Manager, die dir in deiner Ausbildung und Weiterentwicklung zur Seite stehen.</p>
+  <p>Doch bei aller Unterstützung gilt: <strong>Deine Karriere basiert auf Eigenverantwortung.</strong> Dein Engagement, deine Lernbereitschaft und deine Disziplin sind die Schlüssel zu deinem Erfolg. Unterstützung bekommst du jederzeit – aber den entscheidenden Schritt nach vorne musst du selbst machen.</p>
+
+  <div class="note note-pink"><strong>Persönlichkeitsentwicklung ist ein zentrales Thema.</strong> Du wirst schnell merken, dass es nicht nur um Fachwissen geht, sondern darum, dein persönliches Warum zu erkennen: Was treibt dich an? Wofür willst du morgens aufstehen? Wer das für sich klar beantworten kann, wird auch in schwierigen Phasen die nötige Motivation finden, dranzubleiben.</div>
+
+  <p>Neben der persönlichen Entwicklung gibt es bei tecis ein außergewöhnlich breites Angebot an Kursen, Trainings und Seminaren, die dir helfen, fachlich und persönlich zu wachsen. Viele davon sind kostenfrei oder werden finanziell unterstützt. Nutze die Möglichkeiten des eCampus und Infothek, bilde dich in Microsoft 365, Systemarbeit oder Spezialthemen weiter und investiere früh in dein Wissen, denn es ist dein Fundament für langfristigen Erfolg.</p>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Inhaltsverzeichnis</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 2 – Meine Vorstellung &#8594;</button>
+  </div>
+</div>
+
+<!-- ══ 2: VORSTELLUNG ══ -->
+<div class="chapter" id="ch-2">
+  <div class="chap-label">Kapitel 2 · Einstieg</div>
+  <div class="chap-title">Zu meiner Person</div>
+  <div class="chap-lead">Bevor wir über Karriere, Termine oder Strukturen sprechen, möchte ich dir etwas viel Wichtigeres mitgeben: Warum ich morgens aufstehe. Und warum ich mich entschieden habe, diesen Weg bei tecis zu gehen.</div>
+
+  <p>Mein Name ist Kim Hung Dao, ich bin 30 Jahre alt, lebe heute in Hochheim am Main und bin vor einigen Jahren bewusst ins Rhein-Main-Gebiet gezogen – nicht für mich, sondern für etwas Größeres: Expansion. Perspektiven. Die Möglichkeit, Menschen einen Weg zu bereiten, dem sie folgen können.</p>
+  <p>Ich komme aus einfachen Verhältnissen. Ich bin die erste Generation meiner Familie, die in Deutschland Fuß fasst. Meine Mutter hat mich mit vier Jahren hierher geholt – mit viel Mut, mit vielen Opfern, und mit dem Wunsch, mir ein besseres Leben zu ermöglichen.</p>
+  <p>Ich weiß, wie es sich anfühlt, kämpfen zu müssen, dazugehören zu wollen und gleichzeitig das Gefühl zu haben, dass der Weg nach oben nur für andere bestimmt ist.</p>
+  <p>Bevor ich tecis kannte, dachte ich, Karriere sei ein Wettkampf. Ein Rennen. Etwas, das man nur gewinnt, wenn man genug opfert – Zeit, Gesundheit, Familie, Werte. Doch innerlich war da ein Schmerzpunkt: Ein Leben ohne echten Sinn, ohne echte Zugehörigkeit, und ohne Gestaltungsmöglichkeit – das war nie mein Weg.</p>
+  <p>Dann kam tecis. Und plötzlich war da ein Ort, der all das verband, wonach ich gesucht hatte:</p>
+  <ul>
+    <li>Zugehörigkeit zu Menschen, die Leistung, Werte und Zusammenhalt leben</li>
+    <li>Sinn im Handeln – Menschen helfen, aufsteigen, soziale Ungleichheit bekämpfen</li>
+    <li>Karriere &amp; Aufstieg, aber nicht auf Kosten des Menschseins</li>
+    <li>Leistungsgerechte Bezahlung ohne politische Spielchen</li>
+    <li>Gestaltung – nicht warten, sondern mitwirken, prägen, aufbauen</li>
+  </ul>
+  <p>tecis hat mein Leben verändert. Nicht, weil es „ein Job" ist, sondern weil ich hier endlich den Rahmen gefunden habe, den ich lange gesucht habe: Freiheit, Wirkung, Perspektive – und eine Familie aus Menschen, die füreinander einstehen.</p>
+  <p>Und genau das möchte ich dir weitergeben.</p>
+
+  <h2>Heute ist mein persönliches Warum glasklar</h2>
+  <div class="g2">
+    <div class="card"><p>Ich will Menschen ermöglichen, den sozialen Aufstieg zu schaffen, den ich selbst mir erarbeitet habe.</p></div>
+    <div class="card"><p>Ich will ein Umfeld schaffen, das ich selbst nie hatte – eine wahre Gemeinschaft der Starken.</p></div>
+    <div class="card"><p>Ich will Führungskraft sein, die Türen öffnet, Visionen baut und anderen zeigt, was in ihnen steckt.</p></div>
+    <div class="card"><p>Ich will etwas zurückgeben. Genauso, wie es meine Mutter für mich getan hat.</p></div>
+  </div>
+
+  <p>Aber ich bin nicht nur Führungskraft. Ich bin ein Mensch, der Kraftsport liebt, der beim Kochen und gutem Essen Kraft tankt, der Reisen liebt, genauso wie herausfordernde Momente, beruflich wie privat. Ich liebe Weiterentwicklung, ich liebe Hunde, ich genieße eine gute Shisha-Runde, und ich glaube daran, dass das Leben nicht nur aus Arbeit besteht – sondern aus Momenten, die uns formen.</p>
+  <p>Und nun bist du hier. Mit deiner eigenen Geschichte. Deiner Motivation. Deinen Träumen.</p>
+  <p>Diese Einarbeitungsmappe soll dir Struktur geben. Orientierung. Klarheit. Aber das Wichtigste kann dir kein Dokument geben – deinen eigenen inneren Antrieb.</p>
+  <p>Was du hier aufbaust, ist mehr als eine Karriere. Es ist ein Weg, der dich fordern wird – aber auch einer, der dich stärken, verändern und wachsen lassen wird.</p>
+
+  <div class="quote">
+    <p>Und ich stehe an deiner Seite. Als Mentor. Als Partner. Als jemand, der an dich glaubt. Danke, dass du dich entschieden hast, diesen Weg zu gehen. Danke für dein Vertrauen. Und willkommen im Team – willkommen in deiner Zukunft.</p>
+    <div class="quote-source">Kim Hung Dao · Standortleiter für die tecis Finanzdienstleistungen AG in Wiesbaden</div>
+  </div>
+
+  <h2>Kontakt</h2>
+  <div class="card">
+    <div class="card-title">Kim Hung Dao · tecis Finanzdienstleistungen AG</div>
+    <table>
+      <tr><td><strong>Position</strong></td><td>Standortleiter in Wiesbaden</td></tr>
+      <tr><td><strong>Adresse</strong></td><td>Frankfurter Str. 8, 65189 Wiesbaden (Standortnummer 6661)</td></tr>
+      <tr><td><strong>Mobil</strong></td><td>+49 176 456 929 20</td></tr>
+      <tr><td><strong>Mail</strong></td><td>kim-hung.dao@tecis.de</td></tr>
+      <tr><td><strong>Instagram</strong></td><td>kdao96</td></tr>
+    </table>
+  </div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 1</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 3 – Buchempfehlungen &#8594;</button>
+  </div>
+</div>
+<!-- ══ 3: BUCHEMPFEHLUNGEN ══ -->
+<div class="chapter" id="ch-3">
+  <div class="chap-label">Kapitel 3 · Einstieg</div>
+  <div class="chap-title">Buchempfehlungen</div>
+  <div class="chap-lead">Dein Leben bewusst gestalten – die Quintessenz aus 11 Meisterwerken der Selbstentwicklung. Erfolg, Selbstbestimmung und erfülltes Leben entstehen nicht zufällig. Sie wachsen aus Verständnis für sich selbst, klaren Prioritäten, mentaler Stärke und gezieltem Handeln.</div>
+
+  <p>Menschen sind komplex – gesteuert von Emotionen, unbewussten Mustern und sozialen Dynamiken. Wer diese Mechanismen erkennt, kann sie bewusst lenken, destruktive Muster durchbrechen und sein Leben aktiv gestalten. Die folgenden Prinzipien fassen die wichtigsten Erkenntnisse zusammen, die helfen, Klarheit, Motivation und Wirksamkeit im Alltag zu entfalten.</p>
+
+  <div class="acc open" id="acc-b1">
+    <div class="acc-h" onclick="toggleAcc('acc-b1')"><div class="acc-num">1</div><div style="flex:1"><div class="acc-label">Emotionale Muster erkennen und steuern</div><div class="acc-sub">Die Gesetze der menschlichen Natur · Robert Greene</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Unsere Entscheidungen werden stärker von Gefühlen und unbewussten Trieben geprägt, als wir oft glauben. Wer diese Dynamiken in sich selbst erkennt, gewinnt Abstand, trifft klarere Entscheidungen und vermeidet impulsive Fehler. Ebenso ist es entscheidend, subtile Energien anderer zu erkennen: Narzissmus, Aggression, Neid oder Manipulation wirken überall. Wer versteht, wie diese Muster entstehen, kann Energie kanalisieren, Konflikte reduzieren und konstruktiv mit Menschen umgehen.</p><p><strong>Buch:</strong> „Die Gesetze der menschlichen Natur – The Laws of Human Nature" · ISBN: 978-3-95972-230-8</p></div>
+  </div>
+
+  <div class="acc" id="acc-b2">
+    <div class="acc-h" onclick="toggleAcc('acc-b2')"><div class="acc-num">2</div><div style="flex:1"><div class="acc-label">Verantwortung für das eigene Leben übernehmen</div><div class="acc-sub">Das Prinzip Selbstverantwortung · Reinhard K. Sprenger</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Niemand sonst trägt Verantwortung für deinen Erfolg. Herausforderungen, Fehler oder Rückschläge definieren nicht dein Ende, sondern bieten Chancen zur Weiterentwicklung. Selbstverantwortung verschafft Kontrolle über Denken, Handeln und Resultate. Wer sich bewusst fragt: „Was kann ich wirklich beeinflussen?" kann die Opferrolle verlassen, innere Freiheit erlangen und Entscheidungen selbst gestalten.</p><p><strong>Buch:</strong> „Das Prinzip Selbstverantwortung" · ISBN: 978-3-593-50265-6</p></div>
+  </div>
+
+  <div class="acc" id="acc-b3">
+    <div class="acc-h" onclick="toggleAcc('acc-b3')"><div class="acc-num">3</div><div style="flex:1"><div class="acc-label">Innere Motivation entfalten</div><div class="acc-sub">Drive – Was Sie wirklich motiviert · Daniel Pink</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Nachhaltige Motivation entsteht aus Sinn, Autonomie und dem Streben nach Meisterschaft. Wer eigene Ziele mit persönlicher Bedeutung verknüpft, entwickelt intrinsische Energie, die auch in schwierigen Phasen trägt. Die Verbindung von Freiheit, Kompetenzaufbau und Beitrag zu einem größeren Ziel führt zu Flow, Kreativität und nachhaltigem Engagement.</p><p><strong>Buch:</strong> „Drive – Was Sie wirklich motiviert" · ISBN: 978-3-902404-95-4</p></div>
+  </div>
+
+  <div class="acc" id="acc-b4">
+    <div class="acc-h" onclick="toggleAcc('acc-b4')"><div class="acc-num">4</div><div style="flex:1"><div class="acc-label">Kleine Gewohnheiten mit großer Wirkung</div><div class="acc-sub">Die 1%-Methode · James Clear</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Langfristige Veränderungen resultieren aus winzigen, konsequent wiederholten Gewohnheiten. Jeden Tag eine kleine Entscheidung bewusst treffen, Routinen gestalten und Verhalten systematisch verankern, formt Identität und Erfolg. Negative Muster lassen sich genauso Schritt für Schritt reduzieren.</p><p><strong>Buch:</strong> „Die 1%-Methode – Minimale Veränderung, maximale Wirkung" · ISBN: 978-3-442-17858-2</p></div>
+  </div>
+
+  <div class="acc" id="acc-b5">
+    <div class="acc-h" onclick="toggleAcc('acc-b5')"><div class="acc-num">5</div><div style="flex:1"><div class="acc-label">Klarheit über Sinn und „Warum"</div><div class="acc-sub">Finde dein Warum · Simon Sinek</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Wer weiß, warum er handelt, trifft Entscheidungen leichter und mit größerem Fokus. Dein „Warum" ist ein roter Faden, der sich aus persönlichen Erfahrungen, Werten und Stärken ableitet. Wer sein Warum kennt, kann Beruf, Projekte und Beziehungen danach ausrichten, verliert weniger Energie durch Unklarheit und steigert Motivation nachhaltig.</p><p><strong>Buch:</strong> „Finde dein Warum – Der praktische Wegweiser zu deiner wahren Bestimmung" · ISBN: 978-3-86881-674-7</p></div>
+  </div>
+
+  <div class="acc" id="acc-b6">
+    <div class="acc-h" onclick="toggleAcc('acc-b6')"><div class="acc-num">6</div><div style="flex:1"><div class="acc-label">Ziele bewusst setzen und Prioritäten leben</div><div class="acc-sub">The Big Five for Life · John Strelecky</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Lebenserfolg entsteht, wenn die täglichen Handlungen auf langfristige Ziele ausgerichtet sind. Wer seine fünf wichtigsten Lebensziele definiert – die persönlichen „Big Five" – gestaltet jeden Tag bewusst und prüft Entscheidungen nach ihrem Beitrag zu diesen Zielen. Dieses Vorgehen erhöht Motivation, Klarheit und Zufriedenheit.</p><p><strong>Buch:</strong> „The Big Five for Life – Was wirklich zählt im Leben" · ISBN: 978-3-423-34528-6</p></div>
+  </div>
+
+  <div class="acc" id="acc-b7">
+    <div class="acc-h" onclick="toggleAcc('acc-b7')"><div class="acc-num">7</div><div style="flex:1"><div class="acc-label">Mentale Härte entwickeln</div><div class="acc-sub">Can't Hurt Me · David Goggins</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Widerstände, Schmerzen oder Rückschläge sind unvermeidlich – ihre Wirkung hängt davon ab, wie wir ihnen begegnen. Mentale Stärke entsteht durch konsequentes Handeln, Selbstreflexion, Überwinden von Komfortzonen und das bewusste Trainieren von Disziplin. David Goggins zeigt, dass wir oft erst bei 40% unseres Potenzials aufhören und wie wir darüber hinaus wachsen können.</p><p><strong>Buch:</strong> „Can't Hurt Me – Beherrsche deinen Geist und erreiche jedes Ziel" · ISBN: 978-3-7423-2460-3</p></div>
+  </div>
+
+  <div class="acc" id="acc-b8">
+    <div class="acc-h" onclick="toggleAcc('acc-b8')"><div class="acc-num">8</div><div style="flex:1"><div class="acc-label">Selbstvertrauen und innere Stabilität stärken</div><div class="acc-sub">Das Kind in dir muss Heimat finden · Stefanie Stahl</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Innere Blockaden entstehen durch limitierende Glaubenssätze, alte Verletzungen und gesellschaftliche Erwartungen. Wer sich selbst erkennt, Selbstwert entwickelt und eigene Bedürfnisse achtet, kann authentisch handeln, Beziehungen gesund gestalten und sich von fremdbestimmten Mustern lösen.</p><p><strong>Buch:</strong> „Das Kind in dir muss Heimat finden – Der Schlüssel zur Lösung (fast) aller Probleme" · ISBN: 978-3-424-63107-4<br><strong>Arbeitsbuch:</strong> ISBN 978-3-424-63143-2</p></div>
+  </div>
+
+  <div class="acc" id="acc-b9">
+    <div class="acc-h" onclick="toggleAcc('acc-b9')"><div class="acc-num">9</div><div style="flex:1"><div class="acc-label">Soziale Intelligenz und Beziehungsfähigkeit</div><div class="acc-sub">Wie man Freunde gewinnt · Dale Carnegie</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Menschen reagieren auf Wertschätzung, Aufmerksamkeit und echtes Interesse. Wer Empathie, aktives Zuhören und Anerkennung übt, beeinflusst andere positiv, baut Vertrauen auf und erreicht Kooperation ohne Druck. Praxisnahe Prinzipien, wie soziale Dynamik bewusst gestaltet werden kann – vom Gesprächsauftakt bis zur Führung.</p><p><strong>Buch:</strong> „Wie man Freunde gewinnt" · ISBN: 978-3-596-51308-6</p></div>
+  </div>
+
+  <div class="acc" id="acc-b10">
+    <div class="acc-h" onclick="toggleAcc('acc-b10')"><div class="acc-num">10</div><div style="flex:1"><div class="acc-label">Finanzielle Intelligenz entwickeln</div><div class="acc-sub">Rich Dad Poor Dad · Robert T. Kiyosaki</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Reichtum und Unabhängigkeit entstehen durch finanzielle Bildung, den Aufbau von Assets und die Fähigkeit, Chancen zu erkennen und zu nutzen. Wer Einkommen und Vermögen bewusst steuert, Risiken kalkuliert eingeht und langfristig denkt, schafft Sicherheit und Freiheit.</p><p><strong>Buch:</strong> „Rich Dad Poor Dad" · ISBN: 978-3-690-66042-6</p></div>
+  </div>
+
+  <div class="acc" id="acc-b11">
+    <div class="acc-h" onclick="toggleAcc('acc-b11')"><div class="acc-num">11</div><div style="flex:1"><div class="acc-label">Lebensgestaltung durch Vision, Mut und Konsequenz</div><div class="acc-sub">Dieses Buch verändert Ihr Leben für immer · Martin Wehrle</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Wer sein Leben bewusst führt, definiert eigene Werte, entwickelt Visionen und handelt mutig. Kleine Schritte, kontinuierliche Reflexion und das Überwinden von Ängsten führen zu nachhaltiger Veränderung. Entscheidend ist, Selbstverantwortung zu übernehmen und konsequent dranzubleiben – so lassen sich Gewohnheiten, Denkmuster und letztlich ganze Lebenswege neu formen.</p><p><strong>Buch:</strong> „Dieses Buch verändert Ihr Leben für immer" · ISBN: 978-3-442-39421-0</p></div>
+  </div>
+
+  <div class="note note-green" style="margin-top:16px">Erfüllung, Erfolg und innere Freiheit entstehen durch die Verbindung von Selbstkenntnis, Verantwortung, Gewohnheitsgestaltung und Sinnorientierung. Mentale Stärke, soziale Intelligenz, finanzielle Bildung und intrinsische Motivation sind die Werkzeuge, mit denen du dein Leben bewusst formst. Die genannten Bücher bieten wertvolle Ressourcen, um jedes Thema vertieft zu erforschen und praktische Strategien zu erhalten. Viel Spaß beim Lesen!</div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 2</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 4 – Vision Board &#8594;</button>
+  </div>
+</div>
+<!-- ══ 4: VISION BOARD ══ -->
+<div class="chapter" id="ch-4">
+  <div class="chap-label">Kapitel 4 · Einstieg</div>
+  <div class="chap-title">Dein persönliches WHY – dein Vision Board</div>
+  <div class="chap-lead">Dein WHY ist dein emotionaler Motor. Es beantwortet die Frage: Warum stehe ich morgens auf? Was treibt mich wirklich an – jenseits von Geld, Status oder To-do-Listen? Nur wer sein WHY kennt, kann in schwierigen Phasen durchhalten, klar führen und authentisch handeln.</div>
+
+  <h2>1. Dein persönliches WHY finden</h2>
+  <div class="steps">
+    <div class="step"><div class="step-n">1</div><div class="step-b"><div class="step-t">Deine Herkunft &amp; Prägungen reflektieren</div><div class="step-d">Welche Erfahrungen aus Kindheit &amp; Jugend haben dich geprägt? Was war früher schwierig – und warum willst du genau diesen Mangel heute überwinden? Welche Werte haben dir vielleicht gefehlt, die du heute leben willst (Zugehörigkeit, Sicherheit, Freiheit)?<br><strong>Das WHY liegt fast immer in der Vergangenheit versteckt.</strong></div></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-b"><div class="step-t">Identifiziere deinen Schmerzpunkt (Pain Point)</div><div class="step-d">Was hat dich früher frustriert, verletzt oder begrenzt? Was hat dir damals gefehlt (Anerkennung, Perspektiven, Vorbilder)? Welche Ungerechtigkeit möchtest du heute nicht mehr erleben – und anderen ersparen?<br><strong>Dein WHY ist oft der Gegenentwurf zu deinem Pain Point.</strong></div></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-b"><div class="step-t">Deine intrinsischen Motivatoren kennen</div><div class="step-d">Orientiere dich an den 5 großen inneren Antrieben: <strong>1. Zugehörigkeit</strong> – Gemeinschaft, Anerkennung · <strong>2. Sinn im Handeln</strong> – Beitrag, Wirkung · <strong>3. Karriere &amp; Aufstieg</strong> – Entwicklung, Erfolg · <strong>4. Leistungsgerechte Bezahlung</strong> – Fairness, Freiheit · <strong>5. Gestaltung &amp; Mitwirkung</strong> – Verantwortung, Einfluss<br>Bewerte jedes Feld: Worauf zahlt tecis für dich ein – und warum?</div></div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-b"><div class="step-t">Deine Story formulieren</div><div class="step-d">Wo komme ich her? Was hat mich geprägt? Was treibt mich heute an? Was will ich verändern – für mich &amp; andere?<br>Dein WHY ist meist ein Satz wie: „Ich helfe Menschen aufzusteigen, weil ich selbst erlebt habe, wie sehr Perspektiven das Leben verändern können."</div></div></div>
+    <div class="step"><div class="step-n">5</div><div class="step-b"><div class="step-t">Forme dein WHY in einen Leitsatz</div><div class="step-d">Er soll: verständlich sein · emotional sein · auf deine Vergangenheit aufbauen · in die Zukunft zeigen · dir Kraft geben.<br><em>Beispiel: „Ich möchte Menschen den Weg ebnen, den niemand für mich geebnet hat."</em></div></div></div>
+  </div>
+
+  <h2>Dein WHY – Reflexionsraum</h2>
+  <textarea class="reflex" id="why-text" oninput="save('why',this.value)" placeholder="Schreibe hier dein persönliches WHY... Was treibt dich wirklich an? Was war dein Schmerzpunkt? Was willst du verändern?"></textarea>
+  <p style="font-size:11px;color:var(--muted);margin-top:4px">Wird automatisch gespeichert – nur für dich sichtbar</p>
+
+  <h2>2. Dein WHY mit der AECdisc®-Analyse verbinden</h2>
+  <p>Die AECdisc®-Analyse zeigt dir dein Verhalten &amp; deine Persönlichkeit in vier Grundbereichen:</p>
+  <table>
+    <tr><th>Typ</th><th>Charakteristik</th></tr>
+    <tr><td><strong>A – Aktivität</strong></td><td>Dominant, entschlossen, direkt</td></tr>
+    <tr><td><strong>E – Empathie</strong></td><td>Emotional, menschenorientiert</td></tr>
+    <tr><td><strong>C – Compliance</strong></td><td>Strukturiert, qualitätsorientiert</td></tr>
+    <tr><td><strong>disc</strong></td><td>Klassisches DISC-Modell (D/I/S/G)</td></tr>
+  </table>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Was bringt das für dein WHY?</div>
+      <ul>
+        <li>Sie zeigt, wie du Entscheidungen triffst</li>
+        <li>Sie erklärt, was du brauchst, um motiviert zu bleiben</li>
+        <li>Sie zeigt, welche Umfelder dich stärken</li>
+        <li>Sie macht sichtbar, wie du dein WHY am besten lebst</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">So verbindest du WHY und AECdisc®</div>
+      <p><strong>1. Analysiere deine Stärken:</strong> Wie unterstützt mein Persönlichkeitsprofil mein WHY?<br>
+      A-Typen: „Ich gehe mutig voran, weil ich etwas verändern möchte."<br>
+      E-Typen: „Ich gebe Menschen Halt und Zugehörigkeit."<br>
+      C-Typen: „Ich gebe Struktur, Klarheit und Qualität."</p>
+      <p><strong>2. Finde deinen „Schatten":</strong> Welche Verhaltensweisen bremsen mich? Was fällt mir schwer – obwohl es für mein WHY wichtig wäre?</p>
+      <p><strong>3. Baue dein WHY in deine Stärkenstrategie ein:</strong> A-Typ: „Ich nutze meine Entschlossenheit, um Menschen Wege zu eröffnen." E-Typ: „Ich nutze Empathie, um Menschen emotional mitzunehmen."</p>
+    </div>
+  </div>
+  <div class="note"><strong>4. Nutze AECdisc® für dein Vision Board.</strong> Dein Board zeigt: was dich antreibt · wie du Ziele am besten visualisierst · welche Stärken du aktivieren willst · welche Gewohnheiten zu deinem Charakter passen.</div>
+
+  <h2>3. Dein Vision Board – Jahres- und Lebensvision</h2>
+  <p>Ein Vision Board ist mehr als eine Collage. Es ist dein mentaler Anker. Jeden Tag. Jedes Jahr. Für dein ganzes Leben.</p>
+
+  <div class="g2">
+    <div class="card" style="border-top:3px solid var(--blue)">
+      <div class="card-title">A. Das Jahres-Vision-Board (12-Monats-Plan)</div>
+      <p><strong>Ziel:</strong> Fokus · Klarheit · Motivation · Priorisierung</p>
+      <p><strong>Bereiche:</strong> Karriere &amp; Einkommen · Gesundheit &amp; Körper · Beziehungen &amp; Freundschaft · Persönlichkeitsentwicklung · Lifestyle &amp; Erlebnisse · Emotionale Ziele · Dinge, auf die du stolz sein willst</p>
+      <p><strong>So baust du dein Board auf:</strong></p>
+      <ol>
+        <li>Definiere 5 klare Jahresziele</li>
+        <li>Suche Bilder, Symbole und Worte</li>
+        <li>Arbeite mit Farben (AECdisc-typisch!)</li>
+        <li>Füge konkrete Meilensteine hinzu</li>
+        <li>Setze ein Motto für das Jahr</li>
+        <li>Hänge es sichtbar auf – jeden Tag vor Augen</li>
+      </ol>
+    </div>
+    <div class="card" style="border-top:3px solid var(--pink)">
+      <div class="card-title">B. Das Lebens-Vision-Board (5–30 Jahre)</div>
+      <p><strong>Ziel:</strong> Orientierung · Identität · Bewusstsein · Sinn</p>
+      <p><strong>Bereiche:</strong> Welcher Mensch möchte ich sein? · Welche Werte will ich leben? · Welche Rolle will ich in der Gesellschaft einnehmen? · Welche finanzielle Freiheit strebe ich an? · Welche Wirkung will ich hinterlassen? · Welche Familie/Partnerschaft wünsche ich mir? · Welche Orte will ich sehen?</p>
+      <p><strong>So baust du dein Lebens-Board auf:</strong></p>
+      <ol>
+        <li>Erstelle 4 große Lebensvisionen: Persönlichkeit · Beziehung &amp; Familie · Karriere &amp; Vermögen · Lebensstil &amp; Träume</li>
+        <li>Formuliere deine 10 „Life Goals"</li>
+        <li>Füge Bilder ein, die Emotionen auslösen</li>
+        <li>Lege einen 10–30-Jahres-Horizont fest</li>
+        <li>Verknüpfe dein WHY sichtbar mit jedem Bereich</li>
+        <li>Platziere es an einem ruhigen, persönlichen Ort</li>
+      </ol>
+    </div>
+  </div>
+
+  <h2>4. Der rote Faden: WHY → AECdisc® → Vision Board</h2>
+  <div class="g3">
+    <div class="gc"><div class="gc-label">WHY</div><div class="gc-text">Gibt dir Richtung und Bedeutung</div></div>
+    <div class="gc"><div class="gc-label">AECdisc®</div><div class="gc-text">Zeigt, wie du am besten vorwärts kommst</div></div>
+    <div class="gc"><div class="gc-label">Vision Board</div><div class="gc-text">Zeigt, wohin der Weg geht</div></div>
+  </div>
+
+  <h2>Meine 5 Jahresziele</h2>
+  <textarea class="reflex" id="vision-text" oninput="save('vision',this.value)" placeholder="1. Ziel:&#10;2. Ziel:&#10;3. Ziel:&#10;4. Ziel:&#10;5. Ziel:"></textarea>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 3</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 5 – Persönlichkeitsentwicklung &#8594;</button>
+  </div>
+</div>
+<!-- ══ 5: PERSÖNLICHKEITSENTWICKLUNG ══ -->
+<div class="chapter" id="ch-5">
+  <div class="chap-label">Kapitel 5 · Einstieg</div>
+  <div class="chap-title">Persönlichkeitsentwicklung</div>
+  <div class="chap-lead">Ein Wegweiser für deinen Start und deinen Aufstieg bei tecis. Persönlichkeitsentwicklung bedeutet, bewusst an sich zu arbeiten – an Fähigkeiten, Einstellungen, Routinen und am eigenen Charakter.</div>
+
+  <h2>1. Warum Persönlichkeitsentwicklung ein Schlüssel zum Erfolg ist</h2>
+  <p>Gerade im Vertrieb und in der Selbstständigkeit entscheidet nicht nur Fachwissen über Erfolg, sondern vor allem: Disziplin · Klarheit · Selbstbewusstsein · Kommunikation · Umgang mit Rückschlägen · Struktur &amp; Fokus.</p>
+  <div class="note note-pink"><strong>Dein größtes Kapital bist DU selbst.</strong></div>
+
+  <h2>2. Die Grundpfeiler der Persönlichkeitsentwicklung</h2>
+
+  <h3>2.1 Selbstreflexion – Die Basis jedes Wachstums</h3>
+  <p>Fragen, die du dir regelmäßig stellen solltest:</p>
+  <ul>
+    <li>Wer bin ich – und wer möchte ich werden?</li>
+    <li>Welche Stärken bringe ich mit?</li>
+    <li>Welche Verhaltensmuster halten mich zurück?</li>
+    <li>Was wünsche ich mir langfristig vom Leben?</li>
+    <li>Wie reagiere ich auf Stress, Druck oder Konflikte?</li>
+  </ul>
+  <div class="note">Selbstreflexion schafft Selbstbewusstsein – und daraus entsteht Selbstführung.</div>
+
+  <h3>2.2 Routinen &amp; Gewohnheiten – Kleine Schritte, große Wirkung</h3>
+  <p>Mentale Stärke entsteht durch Routinen, nicht durch Motivation.</p>
+  <ul>
+    <li>Morgenroutine (Dankbarkeit, Planning, Journaling)</li>
+    <li>Sport – 3–5× pro Woche</li>
+    <li>Lernroutine – 20–30 Min täglich Weiterbildung</li>
+    <li>Fokusblöcke statt Multitasking</li>
+    <li>Wöchentliche Reflexion &amp; Planung</li>
+  </ul>
+  <div class="quote"><p>Du wirst nicht auf dein Level der Ziele fallen. Du fällst auf das Level deiner Systeme.</p></div>
+
+  <h3>2.3 Disziplin &amp; Selbstverantwortung</h3>
+  <p>In der Selbstständigkeit gibt es keine Kontrolle von außen – nur die eigene. Darum gilt:</p>
+  <ul>
+    <li>Verbindlichkeit gegenüber dir selbst</li>
+    <li>Termine einhalten</li>
+    <li>Aufgaben zu Ende bringen</li>
+    <li>Nicht auf Motivation warten</li>
+    <li>Verantwortung statt Ausreden</li>
+  </ul>
+  <div class="note note-green">Disziplin bedeutet Freiheit: finanzielle Freiheit, zeitliche Freiheit, persönliche Freiheit.</div>
+
+  <h3>2.4 Emotionale Stabilität &amp; Umgang mit Rückschlägen</h3>
+  <p>Vertrieb bedeutet nicht immer Erfolg – aber immer Lernen. Wichtig ist:</p>
+  <ul>
+    <li>Rückschläge nicht persönlich nehmen</li>
+    <li>Fehler als Feedback sehen</li>
+    <li>Druck als Entwicklungschance betrachten</li>
+    <li>Emotionen wahrnehmen, aber nicht steuern lassen</li>
+    <li>In schwierigen Phasen an dein WHY erinnern</li>
+  </ul>
+
+  <h2>3. AECdisc® – Verstehen, wie du funktionierst</h2>
+  <p>Die AECdisc®-Analyse gibt dir ein präzises Persönlichkeitsprofil. Sie zeigt: Wie du Entscheidungen triffst · Was dich motiviert · Worin deine Stärken liegen · Welche Herausforderungen du hast · In welchem Umfeld du aufblühst.</p>
+
+  <div class="g3">
+    <div class="gc"><div class="gc-label">A – Aktivität</div><div class="gc-text">Dominant, direkt, entschlossen. Wächst durch Verantwortung und klare Ziele.</div></div>
+    <div class="gc"><div class="gc-label">E – Empathie</div><div class="gc-text">Menschenorientiert, emotional, kommunikativ. Wächst durch Zugehörigkeit und Beziehungen.</div></div>
+    <div class="gc"><div class="gc-label">C – Compliance</div><div class="gc-text">Strukturiert, präzise, qualitätsbewusst. Wächst durch klare Systeme und Ordnung.</div></div>
+  </div>
+
+  <h3>3.1 AECdisc® + Persönlichkeitsentwicklung</h3>
+  <p><strong>Klarer Wachstumsplan – Fragen:</strong></p>
+  <ul>
+    <li>Welche Stärken will ich bewusst nutzen?</li>
+    <li>Welche Schattenseiten muss ich im Griff haben?</li>
+    <li>Welche Aufgaben kosten mich Energie?</li>
+    <li>Welche geben mir Energie?</li>
+    <li>Wie kann ich mein WHY in meinem Profil leben?</li>
+  </ul>
+  <div class="note"><strong>Beispiele:</strong> A-Typen lernen Geduld &amp; Empathie · E-Typen lernen Grenzen &amp; Struktur · C-Typen lernen Schnelligkeit &amp; Risiko</div>
+
+  <h2>4. Dein persönliches WHY – Der Motor der Entwicklung</h2>
+  <p>Dein WHY ist die Antwort auf die Frage: „Warum kämpfe ich, auch wenn es schwer wird?" Es ist: Persönlich · Emotional · Tief · Biografisch · Wegweisend.</p>
+  <p>Wenn du dein WHY kennst, wirst du: klarer entscheiden · durchhalten, wenn's schwer wird · Menschen leichter inspirieren · Führung authentischer leben · Ziele mit mehr Energie verfolgen.</p>
+
+  <h2>5. Vision Board – Dein Kompass für die Zukunft</h2>
+  <p>Ein Vision Board macht Ziele sichtbar, spürbar und emotional.</p>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">5.1 Jahres-Vision-Board (12 Monate)</div>
+      <p><strong>Bereiche:</strong> Karriere &amp; Einkommen · Fitness &amp; Gesundheit · Beziehungen · Emotionale Entwicklung · Lifestyle &amp; Erlebnisse · Skills &amp; Weiterentwicklung</p>
+      <p><strong>Aufbau:</strong> 5 klare Jahresziele · Bilder, Symbole, Worte · Farben passend zu deiner Persönlichkeit · Meilensteine pro Quartal · Ein Motto für das Jahr · Täglich sichtbar platzieren</p>
+    </div>
+    <div class="card">
+      <div class="card-title">5.2 Lebens-Vision-Board (5–30 Jahre)</div>
+      <p><strong>Bereiche:</strong> Welcher Mensch will ich sein? · Welche Werte will ich leben? · Welche Rolle in der Gesellschaft? · Finanzielle Freiheit · Welche Wirkung hinterlassen? · Familie/Partnerschaft · Welche Orte erleben?</p>
+      <p><strong>Aufbau:</strong> 4 große Lebensvisionen · 10 Life Goals · Emotionale Bilder · 10–30-Jahres-Horizont · Verbindung zum WHY sichtbar machen · An ruhigem, geschütztem Ort platzieren</p>
+    </div>
+  </div>
+
+  <h2>6. Der rote Faden: Entwicklung, die wirklich trägt</h2>
+  <div class="g3">
+    <div class="gc"><div class="gc-label">WHY</div><div class="gc-text">Gibt Richtung</div></div>
+    <div class="gc"><div class="gc-label">AECdisc®</div><div class="gc-text">Zeigt, wie du funktionierst</div></div>
+    <div class="gc"><div class="gc-label">Vision Board</div><div class="gc-text">Zeigt, wohin du willst</div></div>
+    <div class="gc"><div class="gc-label">Routinen &amp; Disziplin</div><div class="gc-text">Bringen dich dorthin</div></div>
+    <div class="gc"><div class="gc-label">Reflexion</div><div class="gc-text">Hält dich auf Kurs</div></div>
+  </div>
+  <div class="note note-pink" style="margin-top:14px">Persönlichkeitsentwicklung ist kein Event – sie ist ein Weg.</div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 4</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 6 – Unsere Standorte &#8594;</button>
+  </div>
+</div>
+<!-- ══ 6: STANDORTE ══ -->
+<div class="chapter" id="ch-6">
+  <div class="chap-label">Kapitel 6 · Einstieg</div>
+  <div class="chap-title">Unsere Standorte</div>
+  <div class="chap-lead">Unsere Standorte – Montabaur &amp; Wiesbaden.</div>
+
+  <div class="g2">
+    <div class="card" style="border-top:3px solid var(--cyan)">
+      <div class="card-title">📍 Standort Montabaur (Standortnummer: 5181)</div>
+      <p>Der Standort Montabaur ist einer der zentralen Entwicklungs- und Ausbildungsorte in unserer Region. In einer fokussierten, produktiven Umgebung finden hier Teammeetings, Schulungen und intensive Arbeitseinheiten statt.</p>
+      <p>Montabaur steht für Klarheit, Struktur und gemeinsames Vorankommen – ein Ort, an dem neue Partner schnell ankommen, Orientierung finden und ihre ersten Schritte selbstbewusst gehen können.</p>
+      <table>
+        <tr><td><strong>Standortleiter</strong></td><td>Kim Hung Dao (in Zukunft Tobias Blankenagel, Luca Böckling &amp; Patrick Vargas)</td></tr>
+        <tr><td><strong>Adresse</strong></td><td>Wilhelm-Mangels-Straße 13–19, 56410 Montabaur</td></tr>
+      </table>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)">
+      <div class="card-title">📍 Standort Wiesbaden (Standortnummer: 6661)</div>
+      <p>Der Standort Wiesbaden ist unser Hauptstandort im Rhein-Main-Gebiet und bildet das Herzstück unserer regionalen Expansion. Moderne Räumlichkeiten, professionelle Trainings und ein inspirierendes Umfeld machen Wiesbaden zu einem echten Wachstumskern.</p>
+      <p>Hier treffen ambitionierte Menschen zusammen, die gemeinsam ihre Ziele verfolgen, sich gegenseitig unterstützen und Verantwortung übernehmen. Wiesbaden steht für Dynamik, Entwicklung und Zukunftsperspektiven.</p>
+      <table>
+        <tr><td><strong>Standortleiter</strong></td><td>Thorsten Bold, Sebastian Staat, Navjot Singh &amp; Kim Hung Dao</td></tr>
+        <tr><td><strong>Adresse</strong></td><td>Frankfurter Str. 8, 65189 Wiesbaden</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="note note-pink" style="margin-top:14px"><strong>🌐 Zwei Standorte – eine Mission.</strong> Ob Montabaur oder Wiesbaden: Beide Standorte bieten dir die besten Voraussetzungen für deinen Start, deine Weiterentwicklung und deinen langfristigen Erfolg. Hier findest du Gemeinschaft, Struktur, Mentoring, Wachstum – und ein Umfeld, das Menschen aufbaut, stärkt und weiterbringt.</div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 5</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 7 – Wichtige Termine &#8594;</button>
+  </div>
+</div>
+
+<!-- ══ 7: TERMINE ══ -->
+<div class="chapter" id="ch-7">
+  <div class="chap-label">Kapitel 7 · Einstieg</div>
+  <div class="chap-title">Gemeinsam unterwegs – unsere wöchentlichen Konstanten</div>
+  <div class="chap-lead">Feste Termine bilden das Rückgrat unserer Zusammenarbeit – sie begleiten dich während deiner gesamten Laufbahn bei tecis und ermöglichen dir kontinuierlich Austausch, Struktur und Weiterentwicklung.</div>
+
+  <table>
+    <tr><th>Format</th><th>Wann</th><th>Was passiert dort</th></tr>
+    <tr><td><strong>A&amp;O</strong></td><td>Wöchentlich, 1 Stunde mit FK</td><td>Potenziale, Akquise-Ansätze und persönliche Entwicklung besprechen. Keine Woche ohne A&amp;O!</td></tr>
+    <tr><td><strong>Teammeeting</strong></td><td>Mo. 18:30–19:15 Uhr hybrid (Montabaur)<br>Di. 18:30–19:15 Uhr hybrid (Wiesbaden)</td><td>Bevorzugt Präsenz im Büro. Teamkultur, Updates, Austausch.</td></tr>
+    <tr><td><strong>Wochenmeeting</strong></td><td>Mo. 19:30–21:15 Uhr (Montabaur)<br>Di. 19:30–21:15 Uhr (Wiesbaden)</td><td>In Präsenz im Büro. Fachliche Inhalte, Trainings, Rollenspiele.</td></tr>
+    <tr><td><strong>Vertriebsausbildung</strong></td><td>Alle 2 Wochen samstags 10:00–14:00 Uhr hybrid</td><td>Bevorzugt Präsenz (Montabaur/Wiesbaden). Quartalsweise rollierend: PR-Story &amp; Kommunikation · Terminierung &amp; Einwandbehandlung · Beratungsprozess (S1–S4, Service, Empfehlungen, Zuversichtsberatung)</td></tr>
+    <tr><td><strong>Fachausbildung</strong></td><td>Jeden 3. Mittwoch im Monat 19:00–21:00 Uhr digital</td><td>Bevorzugt Präsenz. Mit einem Fachexperten tiefer in komplexe Themen: Versicherungen &amp; Investment.</td></tr>
+    <tr><td><strong>Nebenberuflertag</strong></td><td>Jeden 2. Samstag im Monat 10:00–17:00 Uhr (Montabaur)<br>Jeden 3. Samstag im Monat 10:00–17:00 Uhr (Wiesbaden)</td><td>Gemeinsam mit Team und Führungskraft konzentriert im Büro arbeiten, Fragen klären, produktive Atmosphäre nutzen.</td></tr>
+  </table>
+
+  <div class="note note-pink"><strong>Diese Termine sind eine Konstante</strong> und sollten fest in deinem Kalender verankert sein.</div>
+
+  <h2>Was du zum A&amp;O mitbringst</h2>
+  <ul>
+    <li><strong>Leistungskennzahlen:</strong> Anzahl S1, S2, S3, S4 · Neukontakte &amp; Potenziale · Eigene Terminierungen · Umsatz Eigenleistung (rollierend/wöchentlich) · Teamleistung (falls relevant)</li>
+    <li><strong>Qualitätskennzahlen:</strong> CRM vollständig gepflegt · IDD-Zeiten erfasst · Dokumentation aller Beratungsschritte · Kalender gepflegt &amp; strukturiert</li>
+    <li><strong>Planung &amp; Prioritäten:</strong> Ziel der laufenden Woche vs. IST-Stand · Engpässe &amp; Herausforderungen · Maßnahmenplan für die kommende Woche</li>
+  </ul>
+
+  <div class="note"><strong>Grundsatz:</strong> Ohne Reporting kein Coaching. Ohne Coaching kein Fortschritt. Alles wird im A&amp;O gemeinsam besprochen, gesteuert und dokumentiert.</div>
+
+  <h2>Die Terminarten im Kundengespräch</h2>
+  <table>
+    <tr><th>Kürzel</th><th>Bezeichnung</th><th>Inhalt</th></tr>
+    <tr><td><strong>S1</strong></td><td>Erstgespräch</td><td>Bedarf, Ziele, Lebenssituation &amp; Prioritäten des Kunden verstehen</td></tr>
+    <tr><td><strong>S2</strong></td><td>Konzepttermin</td><td>Anbieter- &amp; Tarifvergleich, IST vs. SOLL, Maßnahmen priorisieren</td></tr>
+    <tr><td><strong>S3</strong></td><td>Entscheidungstermin</td><td>Offene Fragen klären, Empfehlungen durchgehen, Entscheidung ermöglichen</td></tr>
+    <tr><td><strong>S4</strong></td><td>Abschluss / Umsetzung</td><td>Abschluss, Dokumentation, After-Sales, Servicekontakt</td></tr>
+  </table>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 6</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 8 – Erwartungshaltung &#8594;</button>
+  </div>
+</div>
+<!-- ══ 8: ERWARTUNG ══ -->
+<div class="chapter" id="ch-8">
+  <div class="chap-label">Kapitel 8 · Mindset &amp; Kultur</div>
+  <div class="chap-title">Unsere Erwartungshaltung</div>
+  <div class="chap-lead">Der Weg bei tecis ist kein gewöhnlicher Karrierepfad – er ist die Chance, ein eigenes Unternehmen aufzubauen, Menschen zu inspirieren und Verantwortung für Wachstum, Teamkultur und Kundenerfolge zu übernehmen. Dafür braucht es mehr als Talent: Es braucht Charakter, Haltung und unternehmerisches Denken.</div>
+
+  <div class="acc open" id="acc-e1"><div class="acc-h" onclick="toggleAcc('acc-e1')"><div class="acc-num">1</div><div style="flex:1"><div class="acc-label">Unternehmerisches Mindset</div><div class="acc-sub">Denken in Lösungen, handeln statt warten</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-body"><p>Wir suchen Menschen, die nicht auf äußere Motivation angewiesen sind. Eigenständiges Denken und Handeln, proaktive Umsetzung ohne Aufforderung. Bereitschaft, Chancen zu nutzen. Den Anspruch, jeden Tag ein Stück besser zu werden als gestern.</p></div></div>
+
+  <div class="acc" id="acc-e2"><div class="acc-h" onclick="toggleAcc('acc-e2')"><div class="acc-num">2</div><div style="flex:1"><div class="acc-label">Lernbereitschaft &amp; Weiterentwicklung</div><div class="acc-sub">Die Ressourcen stehen bereit – genutzt werden müssen sie von dir</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-body"><p>Teilnahme an Meetings, Trainings und Ausbildungen. Eigenständige Weiterbildung über eCampus und Infothek. Offenheit für Feedback und kontinuierliche Verbesserung. Wachstum als Standard – nicht als Ausnahme.</p></div></div>
+
+  <div class="acc" id="acc-e3"><div class="acc-h" onclick="toggleAcc('acc-e3')"><div class="acc-num">3</div><div style="flex:1"><div class="acc-label">Disziplin, Verbindlichkeit &amp; zuverlässige Umsetzung</div><div class="acc-sub">Freiheit funktioniert nur mit Struktur</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-body"><p>Pünktlichkeit und verbindliche Teilnahme. Aktive Umsetzung von Aufgaben statt sie zu verwalten. Führung des eigenen Kalenders, Wochenplanung und Zielkontrolle. Einhaltung von Standards, Systemen und Prozessen.</p></div></div>
+
+  <div class="acc" id="acc-e4"><div class="acc-h" onclick="toggleAcc('acc-e4')"><div class="acc-num">4</div><div style="flex:1"><div class="acc-label">Professionelles Auftreten &amp; Vorbildfunktion</div><div class="acc-sub">Vertrauen ist nicht verhandelbar</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-body"><p>Gepflegtes, businessgerechtes Auftreten – online wie offline. Wertschätzende und klare Kommunikation. Bewusster Umgang mit sozialen Medien. Vorbildfunktion für Kunden, Partner und das zukünftige Team.</p></div></div>
+
+  <div class="acc" id="acc-e5"><div class="acc-h" onclick="toggleAcc('acc-e5')"><div class="acc-num">5</div><div style="flex:1"><div class="acc-label">Teamgeist &amp; Gemeinschaft</div><div class="acc-sub">Niemand baut bei tecis alleine Karriere auf</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-body"><p>Teilnahme an Teammeetings und Austauschformaten. Bereitschaft, andere mitzunehmen und Wissen zu teilen. Aktive Rolle im Team. Verantwortung für das gemeinsame große Ziel.</p></div></div>
+
+  <div class="acc" id="acc-e6"><div class="acc-h" onclick="toggleAcc('acc-e6')"><div class="acc-num">6</div><div style="flex:1"><div class="acc-label">Konsequentes Arbeiten im System</div><div class="acc-sub">Erfolg bei tecis ist planbar</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-body"><p>Arbeiten im Vertriebssystem (PR-Story, Potenzialarbeit, Terminierung, Beratungsprozess). Nutzung der internen Tools (CRM, Reporting, M365, tecis Apps). Dokumentation, Ordnung und strukturierte Abläufe. Kontinuität – nicht nur kurzfristige Motivation.</p></div></div>
+
+  <div class="acc" id="acc-e7"><div class="acc-h" onclick="toggleAcc('acc-e7')"><div class="acc-num">7</div><div style="flex:1"><div class="acc-label">Klarheit über Ziele &amp; langfristige Vision</div><div class="acc-sub">Unternehmer gestalten bewusst</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div><div class="acc-body"><p>Monatliche, quartalsweise und jährliche Zielplanung. Persönliches WHY, Jahres- und Lebensvision-Board. Bewusste Steuerung der eigenen Motivation und Prioritäten. Den Willen, eine echte Unternehmerkarriere aufzubauen.</p></div></div>
+
+  <div class="note note-green" style="margin-top:20px"><strong>Unser Versprechen an dich:</strong> Du bringst den Einsatz – wir geben dir ein funktionierendes System, ein starkes Team, individuelle Förderung, klare Strukturen, ehrliche Begleitung und eine Karrierechance, die du selbst bestimmst.</div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 7</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 9 – Selbstständigkeit &#8594;</button>
+  </div>
+</div>
+
+<!-- ══ 9: SELBSTSTÄNDIGKEIT ══ -->
+<div class="chapter" id="ch-9">
+  <div class="chap-label">Kapitel 9 · Mindset &amp; Kultur</div>
+  <div class="chap-title">Was Selbstständigkeit bedeutet</div>
+  <div class="chap-lead">Selbstständigkeit bedeutet viel mehr als „sein eigener Chef" zu sein. Es bedeutet Freiheit, Verantwortung, Wachstum – und die bewusste Entscheidung, dein Leben aktiv zu gestalten. Selbstständigkeit ist kein Job. Selbstständigkeit ist ein Mindset. Ein Lebensstil. Eine Entscheidung für Perspektive statt Passivität.</div>
+
+  <div class="pillar-grid">
+    <div class="pillar" data-n="1"><div class="pillar-t">Verantwortung übernehmen</div><div class="pillar-m">„Kein Chef, keine Ausreden."</div><div class="pillar-d">Du triffst Entscheidungen. Du trägst die Verantwortung. Du gestaltest dein Ergebnis. Kein „jemand müsste mal" – Du bist derjenige, der handelt.</div></div>
+    <div class="pillar" data-n="2"><div class="pillar-t">Freiheit durch Struktur</div><div class="pillar-m">„Ordnung schafft Möglichkeiten."</div><div class="pillar-d">Freiheit entsteht erst durch Struktur. Klare Abläufe, geführter Kalender, feste Routinen, Fokus statt Chaos – erst dann ordnen sich die Ergebnisse.</div></div>
+    <div class="pillar" data-n="3"><div class="pillar-t">Wachstum oder Stillstand</div><div class="pillar-m">„Du wächst nicht durch Harmonie."</div><div class="pillar-d">Als Selbstständiger gibt es nur zwei Richtungen: Wachstum oder Stillstand. Wachstum heißt: neue Herausforderungen annehmen, Komfortzonen verlassen, an sich selbst arbeiten.</div></div>
+    <div class="pillar" data-n="4"><div class="pillar-t">Lernen als Lebensstil</div><div class="pillar-m">„Jeden Tag 1% besser = langfristig unschlagbar."</div><div class="pillar-d">Als Selbstständiger hörst du nie auf zu lernen – aus Fehlern, aus Erfolgen, aus Feedback, aus Gesprächen. Wissen ist Macht, und du wendest es täglich an.</div></div>
+    <div class="pillar" data-n="5"><div class="pillar-t">Unternehmerisch denken</div><div class="pillar-m">„Lösungen statt Ausreden."</div><div class="pillar-d">Unternehmer warten nicht – sie handeln. Jammern nicht – sie lösen. Schieben nicht auf – sie priorisieren. „Ich übernehme Verantwortung – immer."</div></div>
+    <div class="pillar" data-n="6"><div class="pillar-t">Du bist kein Verkäufer</div><div class="pillar-m">„Du bist Partner, Mentor, Problemlöser."</div><div class="pillar-d">Du arbeitest mit Menschen. Du baust Vertrauen auf. Du trägst Verantwortung für Entscheidungen, die Leben verändern. Deine Beratung hat Konsequenzen – positive, wenn du sie ernst nimmst.</div></div>
+    <div class="pillar" data-n="7"><div class="pillar-t">Deine Vision leben</div><div class="pillar-m">„Nicht KPIs – deine Freiheit."</div><div class="pillar-d">Es geht um deine Zukunft, deine Träume, deine Familie, dein Warum. Selbstständigkeit ist die Brücke zwischen dem Leben das du hast und dem Leben das du dir wünschst.</div></div>
+  </div>
+
+  <div class="note note-pink" style="margin-top:4px"><strong>Fazit:</strong> Freiheit – aber mit Verantwortung · Wachstum – aber mit Disziplin · Chancen – aber mit Klarheit · Erfolg – aber mit Einsatz · Selbstbestimmtheit – aber mit Strukturen</div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 8</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 10 – Vision &#8594;</button>
+  </div>
+</div>
+
+<!-- ══ 10: VISION ══ -->
+<div class="chapter" id="ch-10">
+  <div class="chap-label">Kapitel 10 · Mindset &amp; Kultur</div>
+  <div class="chap-title">Unsere Vision, Werte &amp; Mission</div>
+  <div class="chap-lead">Für eine starke, chancengerechte Gesellschaft in Deutschland. Unsere Vision ist ein Deutschland, in dem Menschen die Möglichkeit haben, ihre Ziele zu erreichen – unabhängig von Herkunft, Lebensweg oder sozialem Hintergrund.</div>
+
+  <div class="quote"><p>Eine Gesellschaft, in der Menschen durch Persönlichkeit, Bildung und Eigenverantwortung ihr Leben aktiv gestalten – und damit ein Vorbild für andere werden.</p><div class="quote-source">Unsere Vision</div></div>
+
+  <h2>Unsere 5 Werte</h2>
+  <table>
+    <tr><th>#</th><th>Wert</th><th>Was das bedeutet</th></tr>
+    <tr><td>1</td><td><strong>Verantwortung &amp; Selbstbestimmung</strong></td><td>Wer Verantwortung übernimmt, gewinnt Freiheit. Wir fördern Eigeninitiative und unternehmerisches Handeln auf allen Ebenen.</td></tr>
+    <tr><td>2</td><td><strong>Respekt &amp; Gemeinschaft</strong></td><td>Wertschätzung und Zusammenhalt sind die Basis unserer Zusammenarbeit. Gemeinschaft macht uns belastbarer und erfolgreicher.</td></tr>
+    <tr><td>3</td><td><strong>Bildung &amp; Weiterentwicklung</strong></td><td>Bildung ist die Grundlage für sozialen Aufstieg, beruflichen Erfolg und persönliches Wachstum. Menschen können sich ein Leben lang entwickeln.</td></tr>
+    <tr><td>4</td><td><strong>Leistung &amp; Fairness</strong></td><td>Leistung verdient Anerkennung – aber immer auf Basis von Fairness, Ethik und Vertrauen. Erfolg verbunden mit verantwortungsvollem Handeln.</td></tr>
+    <tr><td>5</td><td><strong>Sinn &amp; Wirkung</strong></td><td>Unser Handeln soll einen positiven Unterschied machen – für uns selbst, für unser Umfeld und für die Gesellschaft.</td></tr>
+  </table>
+
+  <h2>Unsere Mission</h2>
+  <p>Menschen dabei helfen: ihre Persönlichkeit zu entfalten, finanzielle und persönliche Stabilität aufzubauen, Chancen zu erkennen und zu nutzen, über sich hinauszuwachsen und Verantwortung für ihr Leben zu übernehmen.</p>
+
+  <div class="note"><strong>Roter Faden:</strong> Vision → beschreibt die Gesellschaft die wir mitgestalten wollen · Werte → sind die Grundlage unseres Handelns · Mission → zeigt wie wir im Alltag Wirkung erzeugen</div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 9</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 11 – Kultur &#8594;</button>
+  </div>
+</div>
+
+<!-- ══ 11: KULTUR ══ -->
+<div class="chapter" id="ch-11">
+  <div class="chap-label">Kapitel 11 · Mindset &amp; Kultur</div>
+  <div class="chap-title">Kultur &amp; interne Standards</div>
+  <div class="chap-lead">Der verbindliche Rahmen für professionelles Arbeiten, Auftreten und Verhalten. Klare Standards – klare Ergebnisse – klare Kultur. Dieses Kapitel stellt sicher, dass jeder neue Partner zu 100% weiß, wie er sich online, offline, im Team, bei Kunden und im Wettbewerb verhalten soll.</div>
+
+  <h2>Grundhaltung</h2>
+  <div class="dd">
+    <div class="do-box"><h4>Do's</h4><ul><li>Freundlich, respektvoll und lösungsorientiert</li><li>Probleme direkt ansprechen – mit der Person, nicht über sie</li><li>Neue Partner aktiv unterstützen und willkommen heißen</li><li>Zuhören bevor du antwortest</li><li>Klar kommunizieren statt andeutungsweise</li></ul></div>
+    <div class="dont-box"><h4>Don'ts</h4><ul><li>Lästern, verbreiten, hinter dem Rücken reden</li><li>Konkurrenzdenken gegen das eigene Team</li><li>Passiv-Aggressivität oder unterschwellige Kommentare</li><li>„Ich dachte, jemand anderes macht das"</li><li>Schuldzuweisungen und Opferhaltung</li></ul></div>
+  </div>
+
+  <h2>Online-Zusammenarbeit (Teams, Zoom, WhatsApp)</h2>
+  <div class="dd">
+    <div class="do-box"><h4>Do's</h4><ul><li>Kamera immer an (Ausnahmen nur bei Krankheit)</li><li>Ruhiger, professioneller Hintergrund</li><li>Nachrichten vollständig formulieren: Kontext + klare Frage</li><li>Reaktionszeit geschäftlich: 4 Stunden</li><li>Erfolge in Gruppen teilen</li></ul></div>
+    <div class="dont-box"><h4>Don'ts</h4><ul><li>Kamera aus wegen Bequemlichkeit</li><li>Essen im Call, Bett, Auto oder Sportstudio</li><li>Vage Nachrichten ohne Kontext: „Kann mir jemand helfen?"</li><li>Keine Privatgespräche, Memes oder Spam in Gruppenkanälen</li><li>Lange Sprachnachrichten ohne Not</li></ul></div>
+  </div>
+
+  <h2>Kleiderordnung</h2>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Herren – Business</div>
+      <ul>
+        <li>Anzug in dunkler Farbe mit weißem / puderblauem Hemd ohne Muster</li>
+        <li>Weißes oder hautfarbenes T-Shirt darunter verhindert Durchsichtigkeit</li>
+        <li>Schwarze, lange Socken · gepflegte Anzugschuhe passend zum Gürtel</li>
+        <li><strong>Positionsnadel stets tragen</strong></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Damen – Business</div>
+      <ul>
+        <li>Businessgerechte, gepflegte Kleidung – mehr Spielraum in der Gestaltung</li>
+        <li>Weißes Hemd oder Bluse ist immer eine gute Wahl</li>
+        <li>Schuhe stets gepflegt und dem Business-Look angepasst</li>
+        <li><strong>Positionsnadel stets tragen</strong></li>
+      </ul>
+    </div>
+  </div>
+  <div class="note"><strong>Merke:</strong> Dein Auftreten ist die erste Botschaft bevor du ein Wort sagst. Kleider machen Leute – im Vertrieb entscheiden die ersten 3 Sekunden.</div>
+
+  <h2>Reaktionszeiten &amp; Kommunikationsregeln</h2>
+  <table>
+    <tr><th>Priorität</th><th>Reaktionszeit</th><th>Beispiel</th></tr>
+    <tr><td>Dringend &amp; wichtig</td><td>Sofort</td><td>Terminfrage eines Kunden, Führungskraft meldet sich</td></tr>
+    <tr><td>Geschäftlich</td><td>Innerhalb 4 Stunden</td><td>Teamanfragen, Kollegen, Nachfassaktionen</td></tr>
+    <tr><td>Allgemein</td><td>Innerhalb 24 Stunden</td><td>Informationsnachrichten, allgemeine Fragen</td></tr>
+  </table>
+
+  <h2>Umgang mit Wettbewerb</h2>
+  <div class="dd">
+    <div class="do-box"><h4>Do's</h4><ul><li>Vergleiche sachlich, nicht herablassend</li><li>Fokus auf eigenen Mehrwert</li><li>Fakten statt Meinungen</li><li>Neutral und professionell bleiben</li></ul></div>
+    <div class="dont-box"><h4>Don'ts</h4><ul><li>Kein Schlechtreden anderer Anbieter</li><li>Keine unseriösen Versprechen</li><li>Keine aggressiven Überzeugungstaktiken</li><li>Keine Aussagen ohne Datenbasis</li></ul></div>
+  </div>
+
+  <h2>Büro-Verhalten &amp; Arbeitsumgebung</h2>
+  <div class="dd">
+    <div class="do-box"><h4>Do's</h4><ul>
+      <li>Sauberer, aufgeräumter Schreibtisch</li>
+      <li>Professionelle Haltung im Büro zu jeder Zeit</li>
+      <li>Andere respektieren und aktiv nicht stören</li>
+      <li>Zum positiven Arbeitsklima beitragen</li>
+    </ul></div>
+    <div class="dont-box"><h4>Don'ts</h4><ul>
+      <li>Kein Essen am offenen Laptop (Krümel &amp; Verschmutzung)</li>
+      <li>Keine privaten Gespräche im Arbeitsbereich</li>
+      <li>Kein „Chill"-Verhalten (Beine hoch, Kopfhörer laut, Gaming)</li>
+      <li>Keine Unordnung am Schreibtisch (Müll, Flaschen, Verpackungen)</li>
+      <li>Kein Abschalten/Kopfhörer-Tunnel ohne Interaktion mit dem Team</li>
+    </ul></div>
+  </div>
+
+  <h2>WhatsApp-Gruppen</h2>
+  <div class="dd">
+    <div class="do-box"><h4>Do's</h4><ul>
+      <li>Inhalte mit echtem Mehrwert posten</li>
+      <li>Erfolge teilen und andere motivieren</li>
+      <li>Fragen klar strukturieren: Kontext + konkrete Frage</li>
+      <li>Schnell und verbindlich auf Nachrichten reagieren</li>
+    </ul></div>
+    <div class="dont-box"><h4>Don'ts</h4><ul>
+      <li>Keine unnötigen GIFs, Memes oder Privatgespräche in Teamgruppen</li>
+      <li>Keine Werbung oder externen Links ohne Relevanz</li>
+      <li>Keine hitzigen Diskussionen oder Konflikte über Gruppenchats</li>
+      <li>Keine Kundendaten in Gruppenkanälen teilen</li>
+    </ul></div>
+  </div>
+
+  <h2>Verbindlichkeit &amp; Zuverlässigkeit</h2>
+  <div class="g3">
+    <div class="card">
+      <div class="card-title">Pünktlichkeit</div>
+      <ul><li>10 Minuten vor Beginn = pünktlich</li><li>Bei Verspätung proaktiv informieren</li><li>Kein Nichterscheinen ohne vorherige Absage</li></ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Verbindlichkeit</div>
+      <ul><li>Getroffene Absprachen immer einhalten</li><li>Proaktiv kommunizieren wenn etwas nicht klappt</li><li>Termine nicht einfach ohne Rücksprache verschieben</li></ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Zuverlässigkeit</div>
+      <ul><li>Ergebnisse aktiv zurückmelden</li><li>Aufgaben tracken (Planner, Notion, Excel)</li><li>Kein passives Mitlaufen – Verantwortung übernehmen</li></ul>
+    </div>
+  </div>
+
+  <h2>Pflichten als Vertriebspartner</h2>
+  <div class="dd">
+    <div class="do-box"><h4>Pflichten</h4><ul>
+      <li>DSGVO vollständig einhalten</li>
+      <li>Kundendaten ausschließlich im CRM erfassen</li>
+      <li>Beratungsdokumentation vollständig führen</li>
+      <li>Compliance-Regeln jederzeit einhalten</li>
+      <li>Qualifikationen (§34d/f) aktuell halten</li>
+    </ul></div>
+    <div class="dont-box"><h4>Verboten</h4><ul>
+      <li>Kein Umgang mit Kundendaten über Privataccounts</li>
+      <li>Keine Beratung ohne ausreichende Qualifikation</li>
+      <li>Keine Abkürzungen im Beratungsprozess</li>
+      <li>Keine Beratung ohne Dokumentation</li>
+      <li>Keine externen Konkurrenzprodukte vermitteln</li>
+    </ul></div>
+  </div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 10</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 12 – Unternehmerbasics &#8594;</button>
+  </div>
+</div>
+
+<!-- ══ 12: UNTERNEHMERBASICS ══ -->
+<div class="chapter" id="ch-12">
+  <div class="chap-label">Kapitel 12 · Unternehmen &amp; System</div>
+  <div class="chap-title">Unternehmerbasics</div>
+  <div class="chap-lead">„Dein Start bei tecis" – die wichtigsten rechtlichen und organisatorischen Schritte für deinen Einstieg als selbstständiger Vertriebspartner.</div>
+
+  <div class="note note-pink">Die ausführliche offizielle „Dein Start bei tecis"-Broschüre liegt dir zusätzlich als eigenes Dokument vor. Die folgenden Punkte fassen die wichtigsten Schritte zusammen.</div>
+
+  <h2>a. VP-Vertrag &amp; rechtliche Rahmenbedingungen</h2>
+  <p>Als Vertriebspartnerin bzw. Vertriebspartner bist du Repräsentant der tecis Finanzdienstleistungen AG. Du bist selbstständig gewerbetreibend und somit als Handelsvertreter nach §§ 84, 92 HGB für tecis tätig. Du kannst haupt- oder nebenberuflich starten.</p>
+  <div class="steps">
+    <div class="step"><div class="step-n">1</div><div class="step-b"><div class="step-t">VP-Vertrag erhalten &amp; prüfen</div><div class="step-d">Du erhältst deinen Vertriebspartnervertrag von deiner Führungskraft. Lies ihn vollständig durch.</div></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-b"><div class="step-t">Vertrag unterschreiben (2-fach)</div><div class="step-d">Beide Exemplare unterschreiben – eines bleibt bei dir, eines geht zurück an tecis.</div></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-b"><div class="step-t">Einreichen bei deiner Führungskraft</div><div class="step-d">Dein unterschriebenes Exemplar geht zurück, damit deine Partnerschaft offiziell aktiviert werden kann.</div></div></div>
+  </div>
+
+  <h2>b. Führungszeugnis beantragen</h2>
+  <div class="card">
+    <div class="card-title">So beantragst du dein Führungszeugnis</div>
+    <ol>
+      <li>Online-Antrag über das Bundesamt für Justiz (www.fuehrungszeugnis-portal.de) oder persönlich beim Bürgeramt deiner Stadt</li>
+      <li>Art: „Einfaches Führungszeugnis" zur Vorlage bei einer Behörde / einem Unternehmen</li>
+      <li>Bearbeitungszeit: ca. 1–3 Wochen</li>
+      <li>Das Führungszeugnis darf bei Einreichung nicht älter als 3 Monate sein</li>
+    </ol>
+  </div>
+
+  <h2>c. Gewerbeanmeldung</h2>
+  <p>Du bist verpflichtet, bei Beginn deiner Tätigkeit für tecis ein Gewerbe anzumelden.</p>
+  <div class="note"><strong>Art des Gewerbes:</strong> „Kundenakquise und Aufnahme von Daten". Meldest du es zu spät an, begehst du eine Ordnungswidrigkeit.</div>
+  <table>
+    <tr><th>Schritt</th><th>Beschreibung</th></tr>
+    <tr><td>1. Formular besorgen</td><td>Beim Gewerbeamt deiner Stadt/Gemeinde online oder persönlich</td></tr>
+    <tr><td>2. Angaben machen</td><td>Tätigkeit: „Vermittlung von Kontaktdaten zur Anbahnung von Versicherungsabschlüssen, Vermittlung von Strom- und Gasverträgen"</td></tr>
+    <tr><td>3. Gebühr zahlen</td><td>Je nach Kommune ca. 20–60 €</td></tr>
+    <tr><td>4. Gewerbeschein erhalten</td><td>Wird oft sofort oder per Post zugesendet</td></tr>
+  </table>
+
+  <h2>d. Formular Befreiung Rentenversicherung bei GRV</h2>
+  <p>Als Selbstständiger kannst du dich unter bestimmten Voraussetzungen von der gesetzlichen Rentenversicherungspflicht befreien lassen. Dafür sind zwei Einreichungen notwendig: das interne tecis-Formular an die Zentrale sowie der offizielle Antrag bei der Deutschen Rentenversicherung.</p>
+  <div class="note note-pink"><strong>Beförderungsrelevant:</strong> Innerhalb von 3 Monaten nach Start müssen sowohl das interne tecis-Formular als auch der Antrag bei der Deutschen Rentenversicherung eingereicht werden. Ohne beide Unterlagen keine Beförderung zum Beraterassistenz.</div>
+  <table>
+    <tr><th>Schritt</th><th>Beschreibung</th></tr>
+    <tr><td>1. Internes tecis-Formular einreichen</td><td>Internes tecis-Formular zur Rentenversicherungsbefreiung ausfüllen und bei der Zentrale einreichen</td></tr>
+    <tr><td>2. Antrag bei der Deutschen Rentenversicherung stellen</td><td>Formular „Antrag auf Befreiung von der Versicherungspflicht in der Rentenversicherung für Selbständige mit einem Auftraggeber" (V0050) ausfüllen</td></tr>
+    <tr><td>3. Angaben zur Tätigkeit machen</td><td>Art der Tätigkeit, Auftraggeber (tecis AG) und kurze Tätigkeitsbeschreibung im Formular angeben; Nachweis (z. B. Gewerbeanmeldung) beifügen</td></tr>
+    <tr><td>4. Bescheid abwarten</td><td>Die Deutsche Rentenversicherung prüft den Antrag und stellt bei Bewilligung den Befreiungsbescheid aus</td></tr>
+  </table>
+
+  <h2>e. Fragebogen steuerliche Erfassung Finanzamt</h2>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Was du tun musst</div>
+      <ul>
+        <li>Fragebogen zur steuerlichen Erfassung online über ELSTER oder beim Finanzamt einreichen</li>
+        <li>Steuernummer wird dir nach Bearbeitung zugewiesen</li>
+        <li>Angabe der geschätzten Einnahmen für das erste und zweite Jahr</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Kleinunternehmerregelung</div>
+      <p>Bis 22.000 € Jahresumsatz möglich (§19 UStG). Provisionen aus Versicherungsvermittlung sind aktuell umsatzsteuerfrei.</p>
+    </div>
+  </div>
+
+  <h3>Ausfüllhilfe: Fragebogen Feld für Feld</h3>
+  <p>Die folgende Übersicht orientiert sich an der Nummerierung des Fragebogens zur steuerlichen Erfassung und zeigt, was du in den für tecis-Vertriebspartner relevanten Feldern einträgst.</p>
+
+  <h3>1. Allgemeine Angaben</h3>
+  <table>
+    <tr><th>Feld</th><th>Was du einträgst</th></tr>
+    <tr><td>1.1 Steuerpflichtige(r)/Beteiligte(r)</td><td>Deine persönlichen Daten: Name, Vorname, ausgeübter Beruf, Geburtsdatum, Adresse</td></tr>
+    <tr><td>1.2 Ehegatte/Lebenspartner(in)</td><td>Nur ausfüllen, falls verheiratet/verpartnert – entsprechende Daten des Partners</td></tr>
+    <tr><td>1.3 Kommunikationsverbindungen</td><td>Telefonnummer und E-Mail-Adresse, unter der du erreichbar bist</td></tr>
+    <tr><td>1.4 Art der Tätigkeit</td><td>„Vermittlung von Kontaktdaten und Vorbereitung von Vertragsanbahnungen in der Versicherungsvermittlung"</td></tr>
+    <tr><td>1.5 Bankverbindung für Steuererstattungen</td><td>IBAN/BIC des Kontos, auf das Steuererstattungen erfolgen sollen; SEPA-Lastschriftverfahren freiwillig</td></tr>
+    <tr><td>1.6 Steuerliche Beratung</td><td>Falls vorhanden: Name/Firma deines Steuerberaters eintragen, sonst „Nein" ankreuzen</td></tr>
+    <tr><td>1.7 Empfangsbevollmächtigte(r)</td><td>Nur ausfüllen, wenn dein Steuerberater auch bevollmächtigt Post entgegennehmen soll</td></tr>
+    <tr><td>1.8 Bisherige persönliche Verhältnisse</td><td>Nur relevant, wenn du innerhalb der letzten 12 Monate umgezogen bist oder bereits steuerlich erfasst warst</td></tr>
+  </table>
+
+  <h3>2. Angaben zur selbständigen Tätigkeit</h3>
+  <table>
+    <tr><th>Feld</th><th>Was du einträgst</th></tr>
+    <tr><td>2.1 Anschrift des Unternehmens</td><td>Anschrift aus deiner Gewerbeanmeldung</td></tr>
+    <tr><td>2.2 Beginn der Tätigkeit</td><td>Dein tatsächliches Startdatum bei tecis</td></tr>
+    <tr><td>2.3 Betriebsstätten</td><td>In der Regel „Nein" – außer du unterhältst mehrere Standorte</td></tr>
+    <tr><td>2.4 Kammerzugehörigkeit</td><td>„Nein" (keine Pflichtmitgliedschaft in Handwerks-/IHK für Versicherungsvermittler)</td></tr>
+    <tr><td>2.5 Handelsregistereintragung</td><td>„Nein", da Einzelunternehmen ohne Handelsregistereintrag</td></tr>
+    <tr><td>2.6 Gründungsform</td><td>„Neugründung" zu deinem Startdatum</td></tr>
+    <tr><td>2.7 Bisherige betriebliche Verhältnisse</td><td>„Ja" ankreuzen, falls du in den letzten 5 Jahren bereits ein Gewerbe/eine selbständige Tätigkeit ausgeübt hast, sonst „Nein"</td></tr>
+  </table>
+
+  <h3>3. Angaben zur Festsetzung der Vorauszahlungen</h3>
+  <div class="note">Trage bei „Einkünfte aus Gewerbebetrieb" deine geschätzten Einnahmen für das Gründungsjahr und das Folgejahr ein – realistisch kalkuliert, da diese Angabe die Höhe deiner Einkommensteuer-Vorauszahlungen bestimmt.</div>
+
+  <h3>4. Angaben zur Gewinnermittlung</h3>
+  <table>
+    <tr><th>Feld</th><th>Was du einträgst</th></tr>
+    <tr><td>Gewinnermittlungsart</td><td>„Einnahmenüberschussrechnung" (EÜR) ankreuzen – Standard für Einzelunternehmer ohne Bilanzpflicht</td></tr>
+  </table>
+
+  <h3>7. Angaben zur Umsatzsteuer</h3>
+  <table>
+    <tr><th>Feld</th><th>Was du einträgst</th></tr>
+    <tr><td>7.1 Summe der Umsätze (geschätzt)</td><td>Deine geschätzten Einnahmen für Gründungs- und Folgejahr</td></tr>
+    <tr><td>7.3 Kleinunternehmer-Regelung</td><td>Generell ankreuzen: „Es wird die Kleinunternehmer-Regelung (§19 Abs. 1 UStG) in Anspruch genommen"</td></tr>
+    <tr><td>7.5 Steuerbefreiung</td><td>„Ja" ankreuzen, Art des Umsatzes: „Vermittlung von Versicherungen" (§4 Nr. 11 UStG) – Provisionen aus Versicherungsvermittlung sind umsatzsteuerfrei</td></tr>
+  </table>
+
+  <div class="note note-pink">Die Abschnitte 5 (anderweitige Bauabzugsteuer), 6 (Lohnsteuer) und 8 (Personengesellschaft) sind für die meisten tecis-Vertriebspartner ohne Angestellte bzw. Gesellschaftsbeteiligung nicht relevant und können übersprungen werden. Bei Unsicherheiten hilft dein Steuerberater oder das Finanzamt weiter.</div>
+
+  <h2>f. Bankverbindung &amp; Provisionsabrechnung</h2>
+  <p>Für die Auszahlung deiner Provisionen benötigst du ein Geschäfts- oder Gehaltskonto, das du tecis mitteilst. Provisionsabrechnungen erhältst du regelmäßig über das tecis Informationssystem (tIS) und kannst sie dort jederzeit einsehen.</p>
+
+  <h2>g. Datenschutz- &amp; Verschwiegenheitserklärung</h2>
+  <div class="note"><strong>Pflicht vor Tätigkeitsbeginn:</strong> Mit der Unterschrift verpflichtest du dich, alle Kundendaten streng vertraulich zu behandeln und ausschließlich im Rahmen deiner Tätigkeit für tecis zu verwenden. Mehr dazu in Kapitel 20 (Compliance &amp; Haftung).</div>
+
+  <h2>Wichtige Sonderfälle</h2>
+  <div class="g2">
+    <div class="card" style="border-top:3px solid var(--green)">
+      <div class="card-title">Gründungszuschuss &amp; Einstiegsgeld</div>
+      <p>Wenn du zuvor arbeitslos gemeldet warst, kannst du bei der Arbeitsagentur einen Gründungszuschuss oder Einstiegsgeld beantragen. Diese Förderung unterstützt dich finanziell in den ersten Monaten der Selbstständigkeit.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--orange)">
+      <div class="card-title">Öffentlicher Dienst</div>
+      <p>Wer hauptberuflich im öffentlichen Dienst beschäftigt ist, benötigt vor dem Start bei tecis eine Nebentätigkeitsgenehmigung des Arbeitgebers. Diese muss vor dem ersten Arbeitstag bei tecis vorliegen.</p>
+    </div>
+  </div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 11</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 13 – Geschäftsplan &#8594;</button>
+  </div>
+</div>
+<!-- ══ 13: GESCHÄFTSPLAN ══ -->
+<div class="chapter" id="ch-13">
+  <div class="chap-label">Kapitel 13 · Unternehmen &amp; System</div>
+  <div class="chap-title">Geschäftsplan</div>
+  <div class="chap-lead">Das Geschäftsmodell basiert auf einem klaren Ziel: Menschen ganzheitlich zu beraten, ihre finanziellen Entscheidungen zu vereinfachen und durch ein planbares, skalierbares Beratungssystem unternehmerischen Erfolg zu ermöglichen.</div>
+
+  <h2>a. Das Geschäftsmodell bei tecis</h2>
+  <p>Das Modell besteht aus 4 ineinandergreifenden Bausteinen. Jeder Baustein ist so aufgebaut, dass ein Partner sich fachlich, persönlich und unternehmerisch entwickeln kann.</p>
+  <div class="g2">
+    <div class="card"><div class="card-title">1️⃣ Beratungsprozess</div><p>Qualifiziert, standardisiert &amp; dokumentiert</p></div>
+    <div class="card"><div class="card-title">2️⃣ System &amp; Ausbildung</div><p>Wissen → Umsetzung → Ergebnis</p></div>
+    <div class="card"><div class="card-title">3️⃣ Karriere &amp; Unternehmertum</div><p>Wachstumspfade &amp; Zulassungen</p></div>
+    <div class="card"><div class="card-title">4️⃣ Vergütung &amp; Skalierung</div><p>Leistungsgerechte Einkommenskomponenten</p></div>
+  </div>
+
+  <h3>Der Beratungsprozess im Detail</h3>
+  <div class="acc open" id="acc-bp1">
+    <div class="acc-h" onclick="toggleAcc('acc-bp1')"><div class="acc-num">1</div><div style="flex:1"><div class="acc-label">PR-Story &amp; Qualifizierung</div><div class="acc-sub">Bedürfnis, Ziele, Motivation verstehen</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Der Berater klärt: Wer ist der Kunde? Welche Ziele sind wichtig (kurz &amp; langfristig)? Welche Herausforderungen bestehen? Welche finanziellen Themen sind offen? Wo braucht der Kunde Struktur, Klarheit oder Lösungen? Dieser Schritt schafft Vertrauen, Verständnis und Richtung.</p></div>
+  </div>
+  <div class="acc" id="acc-bp2">
+    <div class="acc-h" onclick="toggleAcc('acc-bp2')"><div class="acc-num">2</div><div style="flex:1"><div class="acc-label">Terminierung &amp; Erstgespräch (S1)</div><div class="acc-sub">Status quo aufnehmen, Zielbild definieren</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Analyse der aktuellen finanziellen Situation · Aufnahme aller relevanten Daten · Klärung der Erwartungshaltung · Festlegung der Beratungsbereiche (z.B. Absicherung, Vermögensaufbau, Liquidität, Familie) · Transfer der Ziele in messbare Parameter. Hier entscheidet sich, welchen Wert die Beratung liefern kann.</p></div>
+  </div>
+  <div class="acc" id="acc-bp3">
+    <div class="acc-h" onclick="toggleAcc('acc-bp3')"><div class="acc-num">3</div><div style="flex:1"><div class="acc-label">Konzeptphase &amp; Beratung (S2–S4)</div><div class="acc-sub">Ganzheitliche, kundenorientierte Lösungen</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Vergleich unterschiedlicher Anbieter · Gegenüberstellung IST vs. SOLL · Berechnung individueller Lösungen · Priorisierung der Maßnahmen · Aufzeigen von Alternativen · Transparente Empfehlung &amp; Begründung. Der Kunde versteht warum eine Lösung sinnvoll ist – Entscheidungen werden fundiert getroffen, die Beratung ist nachvollziehbar und dokumentiert.</p></div>
+  </div>
+  <div class="acc" id="acc-bp4">
+    <div class="acc-h" onclick="toggleAcc('acc-bp4')"><div class="acc-num">4</div><div style="flex:1"><div class="acc-label">Umsetzung &amp; Service</div><div class="acc-sub">Kundenlösungen erfolgreich implementieren</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Vertragsabschluss · Unterschriftenprozess · Dokumentation &amp; Archivierung · After-Sales: Rückfragen, Anpassungen, technische Abläufe · Serviceprozess: Zeitplan, Erwartungen, Review-Termine. Dies schafft Zufriedenheit, Bindung und die Grundlage für Empfehlungen.</p></div>
+  </div>
+  <div class="acc" id="acc-bp5">
+    <div class="acc-h" onclick="toggleAcc('acc-bp5')"><div class="acc-num">5</div><div style="flex:1"><div class="acc-label">Kontinuierliche Betreuung &amp; langfristige Bindung</div><div class="acc-sub">Lebensbegleitende Beratung</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Jährliche oder halbjährliche Reviews · Anpassungen bei Lebensereignissen (Haus, Kinder, Jobwechsel etc.) · Optimierung &amp; Aktualisierung bestehender Verträge · Steigerung der Finanzkompetenz des Kunden · langfristige finanzielle Planung &amp; Vermögensstrategie. Ergebnis: langfristige Kundenbindung, planbare Folgeumsätze, hohe Empfehlungsquote.</p></div>
+  </div>
+
+  <h3>System &amp; Ausbildung – das Fundament für Erfolg</h3>
+  <p>Das System stellt sicher, dass jeder Partner – unabhängig von Vorwissen – erfolgreich werden kann.</p>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">1. Onboarding</div>
+      <p>Die ersten Wochen sind strukturiert: Einarbeitungsplan · Tool-Einführung · Termintraining · Shadowing · A&amp;O mit Führungskraft · Start der fachlichen Ausbildung. Ziel: Sicherer Start in Beratung, Vertrieb &amp; Organisation.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">2. 12-Wochen-Programm</div>
+      <p>Intensives Einstiegstraining: Grundlagen der Finanzdienstleistung · Beratungsprozess · Systemarbeit · Selbstorganisation · Technologie (M365, CRM etc.) · Potenzialarbeit &amp; Akquise. Legt die Basis für erste Kunden, erste Beratungserlebnisse &amp; erste Umsätze.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">3. eCampus &amp; Infothek</div>
+      <p>Digitale Lernplattform für: Produktschulungen · Beratungslogik · Recht &amp; Regulierung · Kommunikation &amp; Soft Skills · Persönlichkeitsentwicklung. Alles jederzeit abrufbar → Lernen wird skalierbar.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">4. Regelmäßige Trainings &amp; Teammeetings</div>
+      <p>Wiederkehrende Meeting-Struktur: Teammeeting · Wochenmeeting · Vertriebsausbildung · Fachausbildung · Nebenberuflertage · 1:1 A&amp;Os. Diese Struktur sichert Qualität, Fortschritt und Gemeinschaft.</p>
+    </div>
+  </div>
+
+  <h2>b. Aufgabenprofil pro Position</h2>
+  <table>
+    <tr><th>Position</th><th>Kernaufgaben</th></tr>
+    <tr><td><strong>Trainee</strong></td><td>tecis kennenlernen · Beratungen begleiten · Potenzialarbeit &amp; Telefonakquise · 12-Wochen-Programm · Stammdatenpflege · andere Beratungen erleben (Vergleich) · erste Führungsaufgaben (Team mitnehmen)</td></tr>
+    <tr><td><strong>Beraterassistent</strong></td><td>FK aktiv unterstützen bei Terminen · eigenständige Telefonakquise &amp; Potenzialarbeit · erste Beratungsgespräche in Begleitung · IHK §34d Lerninhalte · Konzepterstellung fürs Team unterstützen</td></tr>
+    <tr><td><strong>Juniorberater</strong></td><td>IHK §34d abschließen · S1 selbstständig · S2 eigenständig übernehmen · Potenzialanalysen &amp; Akquise dauerhaft eigenständig · Monatsplanung · Erstgespräche stellvertretend fürs Team</td></tr>
+    <tr><td><strong>Seniorberater</strong></td><td>Eigenständige Beratung &amp; Kundenbetreuung · Verträge selbst unterzeichnen · §34f beginnen &amp; abschließen · Entscheidung Management oder Spezialist · 80% ausgebildet · Monats- &amp; Beförderungsplanung für sich und Team · volle Umsatzverantwortung fürs Team</td></tr>
+  </table>
+
+  <h2>c. Vergütungsmodell, Provisionssystem &amp; Vergütungskomponenten</h2>
+  <p>Das Vergütungsmodell gliedert sich in 4 Komponenten:</p>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">1. Direktvergütung (eigene Vertriebsleistung)</div>
+      <p>Entsteht aus: Abschlüssen · Bestandsvergütung · Servicevergütung · Qualitäts- &amp; Persistenzboni. Sichert: kurzfristiges Einkommen, mittelfristige Bestandsprovision, langfristige Kundenbindung.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">2. Team-/Strukturvergütung (Führungsleistung)</div>
+      <p>Ab Führungskraft entsteht Einkommenshebel durch: Ausbildung neuer Partner · Begleitung in Kundenterminen · Teamumsatz · Leitungsvergütung · Differenzvergütung · Coaching- &amp; Ausbildungsboni. Teamvergütung ist NICHT passiv – sie entsteht nur wenn der Partner ausbildet, begleitet, Qualität sicherstellt und vorlebt.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">3. Skalierungseffekte</div>
+      <p>Entsteht durch: Teamaufbau · Ausbildung neuer Partner · Verdopplung von Teams · stabile Führung · professionelles Recruiting · systematische Schulung. Ein gut geführtes Team produziert kontinuierliches Wachstum, planbare Umsätze, planbare Teamvergütung.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">4. Unternehmerische Hebel</div>
+      <p>Mit zunehmender Erfahrung: weitere Standorte eröffnen · neue Märkte erschließen · professionelle Recruiting-Pipelines aufbauen · Unternehmen strukturieren · Assistenzen einbauen · Bestände &amp; Teams optimieren · mehrere Führungsebenen entwickeln. Führt zu höherem Einkommen, höherer Selbstständigkeit, höherem Unternehmenswert.</p>
+    </div>
+  </div>
+
+  <h2>d. Karrierestufen &amp; Aufstiegsvoraussetzungen</h2>
+  <div style="margin:14px 0">
+    <div class="career-row hunter">
+      <div style="display:flex;flex-direction:column;justify-content:center"><div class="cr-name">Trainee</div><div class="cr-desc">Einstieg · Empfehlungsgeber</div></div>
+      <div><p style="margin:0;font-size:13px">Lerne tecis kennen. Begleite Beratungen. Erste Potenzialarbeit und Telefonakquise. Nimm am 12-Wochen-Programm teil. Entwickle deine PR-Story.</p></div>
+      <div class="cr-prov">7 ‰</div>
+    </div>
+    <div class="career-row hunter">
+      <div style="display:flex;flex-direction:column;justify-content:center"><div class="cr-name">Beraterassistenz</div><div class="cr-desc">350.000 € Volumen · mind. 30% Eigenvolumen · IHK §34d bestehen</div></div>
+      <div><p style="margin:0;font-size:13px">Unterstütze aktiv bei Terminen. Erste eigenständige S1-Gespräche in Begleitung. IHK §34d Lernplan erstellen und bestehen.</p></div>
+      <div class="cr-prov">10 ‰</div>
+    </div>
+    <div class="career-row hunter">
+      <div style="display:flex;flex-direction:column;justify-content:center"><div class="cr-name">Juniorberater</div><div class="cr-desc">350.000 € Volumen · mind. 30% Eigenvolumen · Beginn §34f</div></div>
+      <div><p style="margin:0;font-size:13px">Eigenständige S1 und S2 Gespräche. Erste Monatspläne. Beginne IHK §34f. Entscheide: Hunter oder Pharma.</p></div>
+      <div class="cr-prov">14 ‰</div>
+    </div>
+    <div class="career-row pharma">
+      <div style="display:flex;flex-direction:column;justify-content:center"><div class="cr-name">Seniorberater</div><div class="cr-desc">§34f abgeschlossen · 80% ausgebildet</div></div>
+      <div><p style="margin:0;font-size:13px">Eigenständige Beratung &amp; Kundenbetreuung. Verträge selbst unterzeichnen. Entscheidung: Management oder Spezialist. Volle Umsatzverantwortung fürs Team.</p></div>
+      <div class="cr-prov">17 ‰<br><span style="font-size:11px;color:var(--muted)">+200€/Kunde</span></div>
+    </div>
+    <div class="career-row hunter">
+      <div style="display:flex;flex-direction:column;justify-content:center"><div class="cr-name">Teamleiter</div><div class="cr-desc">§34f Voraussetzung · eigenes Team</div></div>
+      <div><p style="margin:0;font-size:13px">Erstes eigenes Team führen. Ausbildung &amp; Begleitung neuer Partner. Differenzvergütung auf Teamumsatz beginnt hier.</p></div>
+      <div class="cr-prov" style="font-size:13px;color:var(--muted)">individuell</div>
+    </div>
+    <div class="career-row hunter">
+      <div style="display:flex;flex-direction:column;justify-content:center"><div class="cr-name">Repräsentanzleiter</div><div class="cr-desc">Mehrere Teams · Standortverantwortung</div></div>
+      <div><p style="margin:0;font-size:13px">Führung mehrerer Teams. Aufbau weiterer Führungsebenen. Standortbezogene Gesamtverantwortung.</p></div>
+      <div class="cr-prov" style="font-size:13px;color:var(--muted)">individuell</div>
+    </div>
+    <div class="career-row hunter">
+      <div style="display:flex;flex-direction:column;justify-content:center"><div class="cr-name">Branch Manager</div><div class="cr-desc">Höchste Stufe · regionale Verantwortung</div></div>
+      <div><p style="margin:0;font-size:13px">Mehrere Standorte. Volle unternehmerische Freiheit. Aufbau und Strukturierung eines eigenen Unternehmens innerhalb von tecis.</p></div>
+      <div class="cr-prov" style="font-size:13px;color:var(--muted)">individuell</div>
+    </div>
+  </div>
+  <p style="font-size:12px;color:var(--muted);margin-top:-6px">Für Teamleiter, Repräsentanzleiter und Branch Manager nennt das Geschäftsmodell keine pauschalen Promille-Sätze – die Vergütung setzt sich hier individuell aus Team-, Struktur- und Differenzvergütung zusammen (siehe Vergütungsmodell oben).</p>
+
+  <h3>Karriereweg im Überblick</h3>
+  <div class="note note-pink">Trainee → Beraterassistent → Juniorberater → Seniorberater → Teamleiter → Repräsentanzleiter → Branch Manager</div>
+  <p>Jede Stufe bedeutet: höhere Verantwortung · mehr Einkommen · mehr unternehmerische Freiheit · mehr Führung · breitere fachliche Zulassung · stärkeren Einfluss auf das Team.</p>
+  <p><strong>Wesentliche Qualifikationen:</strong> §34d GewO → Versicherungen · §34f GewO → Finanzanlagen · ggf. §34i (Immobilienfinanzierung) · interne Schulungen · IDD-Zeiten &amp; Dokumentation.</p>
+  <div class="note">Der Partner entscheidet frei: Fachspezialist (tiefe Expertise) oder Führung/Management (Teamaufbau, Struktur). Beides ist möglich – jedes mit eigenem Einkommenspfad.</div>
+
+  <h2>e. Strukturaufbau &amp; Teamvergütung</h2>
+  <p>Der Teamaufbau folgt einem klaren Prozess: Person finden → qualifizieren → Karrieregespräch/Praktikum → Einarbeitung &amp; Ausbildung. Ein gut geführtes Team produziert kontinuierliches Wachstum, planbare Umsätze und planbare Teamvergütung für die Führungskraft.</p>
+
+  <h2>f. Unternehmer vs. Angestellten-Mindset</h2>
+  <div class="g2">
+    <div class="card" style="border-top:3px solid var(--orange)">
+      <div class="card-title">Angestellten-Mindset</div>
+      <ul>
+        <li>Wartet auf Anweisungen</li>
+        <li>Macht das Nötigste</li>
+        <li>Sucht Sicherheit ohne Risiko</li>
+        <li>Verantwortung wird abgegeben</li>
+        <li>Erfolg ist abhängig von anderen</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)">
+      <div class="card-title">Unternehmer-Mindset</div>
+      <ul>
+        <li>Handelt proaktiv, ohne Aufforderung</li>
+        <li>Sucht Lösungen statt Probleme</li>
+        <li>Übernimmt volle Verantwortung</li>
+        <li>Investiert in sich selbst</li>
+        <li>Erfolg liegt in der eigenen Hand</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note note-pink">tecis bietet den Rahmen für echtes Unternehmertum – die Denkweise musst du selbst mitbringen und täglich trainieren.</div>
+
+  <h2>g. Langfristiger Vermögensaufbau im Strukturvertrieb</h2>
+  <p>Im Strukturvertrieb entstehen mehrere Vermögensbausteine gleichzeitig:</p>
+  <ul>
+    <li><strong>Laufendes Einkommen</strong> aus Direktvergütung und Bestandsprovisionen</li>
+    <li><strong>Strukturelles Vermögen</strong> durch aufgebaute Teams und deren Umsätze</li>
+    <li><strong>Persönliches Vermögen</strong> durch eigene Investments, finanziert aus dem Einkommen</li>
+    <li><strong>Unternehmenswert</strong> durch den Aufbau eines stabilen, übertragbaren Kundenstamms und Teams</li>
+  </ul>
+  <div class="note">Wer früh beginnt, strukturiert arbeitet und kontinuierlich reinvestiert, baut sich über Jahre ein Vermögen auf, das weit über ein klassisches Gehalt hinausgeht.</div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 12</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 14 – Systemeinrichtung &#8594;</button>
+  </div>
+</div>
+<!-- ══ 14: SYSTEMEINRICHTUNG ══ -->
+<div class="chapter" id="ch-14">
+  <div class="chap-label">Kapitel 14 · Unternehmen &amp; System</div>
+  <div class="chap-title">Systemeinrichtung &amp; Arbeitsumfeld</div>
+  <div class="chap-lead">Alle Tools und Systeme die du täglich nutzt – von der Ersteinrichtung bis zur Kalenderstruktur.</div>
+
+  <h2>a. E-Mail &amp; M365</h2>
+  <p>Anleitungen für die Ersteinrichtung deines CRM und mobilen Endgeräts findest du in der Infothek. Anleitungen für M365 ebenfalls in der Infothek. Anleitungen für die E-Mail-Signatur findest du in der Infothek, Anleitungen für einzelne Tools von M365 im eCampus.</p>
+
+  <h2>b. CRM &amp; Kundendokumentation</h2>
+  <p>Anleitungen für das CRM und die Kundendokumentation findest du in der Infothek. Jede Kundeninteraktion wird vollständig im CRM dokumentiert – das ist Pflicht, kein Vorschlag.</p>
+  <div class="note"><strong>Datensicherheit:</strong> Regelmäßige Updates durchführen · WLAN-Sicherheit beachten · nur geprüfte Endgeräte nutzen · keine Cloud-Dienste außerhalb des Systems. Ausführliche Datenschutzregeln findest du in Kapitel 20 (Compliance &amp; Haftung).</div>
+
+  <h2>c. tecis Apps</h2>
+  <table>
+    <tr><th>Tool</th><th>Wofür</th><th>Anleitungen</th></tr>
+    <tr><td><strong>tIS (tecis Informationssystem)</strong></td><td>Kunden, Verträge, Kennzahlen, eigene Geschäftsqualität</td><td>Infothek</td></tr>
+    <tr><td><strong>Activity App</strong></td><td>Anruflisten, Termine, Umsatz, Kontakthistorie</td><td>eCampus</td></tr>
+    <tr><td><strong>KlickScan App</strong></td><td>Unterlagen fotografieren, Beratungsmappen digital</td><td>eCampus</td></tr>
+  </table>
+
+  <h2>d. Beratungssoftware &amp; Angebotsprogramme</h2>
+  <p>Anleitungen für die Beratungssoftware (z.B. SitLap) und Angebotsprogramme findest du im eCampus. Diese Tools sind essenziell für die Erstellung von Vergleichen, Konzepten und Angeboten in S2- und S3-Terminen.</p>
+
+  <h2>e. Teams &amp; WhatsApp</h2>
+  <div class="g2">
+    <div class="card" style="border-top:3px solid var(--blue)">
+      <div class="card-title">Microsoft Teams</div>
+      <p>Anleitungen für MS Teams findest du im eCampus. Der Teams-Kanal vom Team heißt <strong>UBR Dao</strong> – klick dich gerne mal durch! Hier findest du unser zentrales Team-Hub, das Dashboard.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--cyan)">
+      <div class="card-title">WhatsApp-Community</div>
+      <p>Unsere WhatsApp-Gruppen liegen in unserer WhatsApp-Community. Trete den einzelnen Kanälen gerne nach Absprache mit deiner Führungskraft bei.</p>
+    </div>
+  </div>
+
+  <h2>f. Reportingstruktur &amp; Kennzahlenmeldung</h2>
+  <p>Das Reporting findet ausschließlich im wöchentlichen A&amp;O-Termin mit deiner direkten Führungskraft und deinem Mentor statt. Dort werden gemeinsam alle relevanten Kennzahlen, deine Aktivitäten und deine Ziele besprochen.</p>
+
+  <h3>Was du zum A&amp;O mitbringst</h3>
+  <div class="g3">
+    <div class="gc">
+      <div class="gc-label">1. Leistungskennzahlen der Woche</div>
+      <div class="gc-text">Anzahl S1, S2, S3, S4 · Neukontakte &amp; Potenziale · Eigene Terminierungen · Umsatz Eigenleistung · Teamleistung (falls relevant)</div>
+    </div>
+    <div class="gc">
+      <div class="gc-label">2. Qualitätskennzahlen</div>
+      <div class="gc-text">CRM vollständig gepflegt · IDD-Zeiten erfasst · Dokumentation aller Beratungsschritte · Kalender gepflegt &amp; strukturiert</div>
+    </div>
+    <div class="gc">
+      <div class="gc-label">3. Planung &amp; Prioritäten</div>
+      <div class="gc-text">Ziel der laufenden Woche vs. IST-Stand · Engpässe &amp; Herausforderungen · Maßnahmenplan für die kommende Woche</div>
+    </div>
+  </div>
+  <div class="note note-pink"><strong>Grundsatz:</strong> Ohne Reporting kein Coaching. Ohne Coaching kein Fortschritt. Alles wird im A&amp;O gemeinsam besprochen, gesteuert und dokumentiert.</div>
+
+  <h2>g. Termin- &amp; Kalenderstruktur</h2>
+  <p>Eine klare Termin- und Kalenderstruktur ist die Grundlage für deinen unternehmerischen Erfolg. Ohne Struktur gibt es keine Planbarkeit, keine Qualität und keine Entwicklung im Vertrieb.</p>
+  <div class="note">Ein gefüllter, gepflegter und sauber strukturierter Kalender ist Pflicht.</div>
+
+  <h3>1️⃣ Grundprinzipien</h3>
+  <ul>
+    <li>Jeder Termin wird sofort eingetragen</li>
+    <li>Ein leerer Kalender ist ein Arbeitsfehler</li>
+    <li>Private Termine gehören ebenfalls in den Kalender (Transparenz)</li>
+    <li>Terminblöcke, Pausen &amp; Arbeitszeiten sind geplant – nicht spontan</li>
+    <li>Jede Woche wird vorab geplant (Montag 08:00 oder Sonntagabend)</li>
+  </ul>
+
+  <h3>2️⃣ Terminarten &amp; Regeln</h3>
+  <table>
+    <tr><th>Terminart</th><th>Beschreibung</th><th>Regeln</th></tr>
+    <tr><td><strong>S-Termine (S1–S4)</strong></td><td>Erstgespräch bis Umsetzung</td><td>Müssen vorbereitet, dokumentiert und pünktlich wahrgenommen werden</td></tr>
+    <tr><td><strong>A&amp;O-Termine</strong></td><td>Wöchentlich, fix</td><td>Vorbereitung zwingend: Zahlen + Herausforderungen + Maßnahmen</td></tr>
+    <tr><td><strong>Akquise-/Potenzialblöcke</strong></td><td>Minimum 1–2 Fokusblöcke täglich</td><td>Handy weg, CRM auf, Ziel klar</td></tr>
+    <tr><td><strong>Follow-Up-Slots</strong></td><td>Täglich ein Zeitfenster</td><td>Für Rückrufe, Mails &amp; CRM-Nachträge</td></tr>
+  </table>
+
+  <h3>4️⃣ Kalenderregeln</h3>
+  <div class="dd">
+    <div class="do-box"><h4>Do's</h4><ul>
+      <li>Alles eintragen (Termine, Aufgaben, Reisen, Pausen, Training)</li>
+      <li>Klare Zeitfenster für S-Termine blocken</li>
+      <li>Wiederkehrende Termine als Serien anlegen</li>
+      <li>Pufferzeiten einplanen</li>
+      <li>Kundentermine 48h vorher bestätigen</li>
+      <li>Bei Verschiebung immer aktive Alternative anbieten</li>
+    </ul></div>
+    <div class="dont-box"><h4>Don'ts</h4><ul>
+      <li>Keine Doppelbuchungen</li>
+      <li>Keine Termine „im Kopf behalten"</li>
+      <li>Kein spontanes Absagen ohne Begründung</li>
+      <li>Keine unvorbereiteten Termine</li>
+      <li>Kein „Slot-Hopping" (ständig Zeiten verschieben)</li>
+      <li>Kein Leerlauf zwischen 09:00–19:00 ohne Eintrag</li>
+    </ul></div>
+  </div>
+
+  <h3>5️⃣ Vorbereitung und Nachbereitung</h3>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Vorbereitung für jeden Termin</div>
+      <ul><li>Agenda im Kalender</li><li>Kunde im CRM aktualisiert</li><li>Unterlagen bereit</li><li>Ziel klar definiert</li><li>Link verschickt (bei Online-Termin)</li></ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Nachbereitung</div>
+      <ul><li>CRM-Eintrag sofort</li><li>Angebotsdokumente ablegen</li><li>Folgeprozess eintragen (Review, Follow-up, S3/S4)</li><li>Offene To-Dos dokumentieren</li></ul>
+    </div>
+  </div>
+
+  <h3>7️⃣ Sichtbarkeit &amp; Transparenz</h3>
+  <p>Deine Führungskraft muss anhand deines Kalenders: deine Auslastung sehen · erkennen, wo du hängst · sehen, wie du planst · dir gezielt helfen können. Deshalb ist ein gepflegter Kalender Pflicht und Voraussetzung für Coaching &amp; Beförderung.</p>
+
+  <h3>8️⃣ Ziel: Unternehmerische Kalenderführung</h3>
+  <div class="note note-pink">Ein Unternehmer plant vorausschauend, bewusst, mit Struktur, mit Fokus auf Umsatz- &amp; Kundenprozesse. Dein Kalender ist dein wichtigstes Führungsinstrument.</div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 13</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 15 – Das tecis-System &#8594;</button>
+  </div>
+</div>
+<!-- ══ 15: TECIS-SYSTEM ══ -->
+<div class="chapter" id="ch-15">
+  <div class="chap-label">Kapitel 15 · Unternehmen &amp; System</div>
+  <div class="chap-title">Das tecis-System</div>
+  <div class="chap-lead">Der strukturierte Weg zu erfolgreicher Beratung, Akquise, Teamaufbau &amp; Führung. Das tecis-System ist ein klar definiertes, planbares und duplizierbares Arbeitsmodell, das dafür sorgt, dass jeder Partner – unabhängig vom Vorwissen – erfolgreich werden kann.</div>
+
+  <div class="g4">
+    <div class="gc"><div class="gc-label">1</div><div class="gc-text"><strong>Akquise &amp; Vertrieb</strong></div></div>
+    <div class="gc"><div class="gc-label">2</div><div class="gc-text"><strong>Beratung &amp; Kundenbestand</strong></div></div>
+    <div class="gc"><div class="gc-label">3</div><div class="gc-text"><strong>Partnergewinnung &amp; Einarbeitung</strong></div></div>
+    <div class="gc"><div class="gc-label">4</div><div class="gc-text"><strong>Führung &amp; Entwicklung</strong></div></div>
+  </div>
+  <div class="note">Alle vier Säulen greifen ineinander und bilden ein vollständiges Unternehmermodell.</div>
+
+  <h2>a. Akquise &amp; Vertrieb</h2>
+  <p>Akquise ist die Grundlage jeder unternehmerischen Tätigkeit im Finanzvertrieb. Das Ziel ist ein konstanter Strom qualifizierter Termine, die über einen strukturierten Prozess entstehen.</p>
+
+  <div class="acc open" id="acc-av1">
+    <div class="acc-h" onclick="toggleAcc('acc-av1')"><div class="acc-num">i</div><div style="flex:1"><div class="acc-label">Potenzialarbeit</div><div class="acc-sub">Menschen aus dem eigenen Umfeld strukturiert informieren</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body">
+      <p><strong>Aufgaben:</strong> Potenzialliste täglich ergänzen · Kontakte aus Netzwerken, Social Media, Events, Bestandskunden · Kontakte bewerten (A/B/C-Potenziale) · Systematische Kontaktaufnahme (z.B. Big 5) · Empfehlungen aktiv generieren</p>
+      <p><strong>Standards:</strong> Mindestens 1–2 Stunden Potenzialarbeit pro Tag · Wöchentliche Potenzialliste → A&amp;O mitbringen · Keine unqualifizierten Gespräche: Vorqualifizierung ist Pflicht</p>
+    </div>
+  </div>
+  <div class="acc" id="acc-av2">
+    <div class="acc-h" onclick="toggleAcc('acc-av2')"><div class="acc-num">ii</div><div style="flex:1"><div class="acc-label">PR-Story</div><div class="acc-sub">Deine persönliche, klare, kurze Geschichte</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body">
+      <p>Die PR-Story erklärt: Wer du bist · Warum du diesen Weg gehst · Was dich antreibt · Warum diese Karriere Sinn macht · Welche Chancen sie für andere bietet.</p>
+      <p><strong>Ziele:</strong> Vertrauen schaffen · Interesse wecken · Relevanz erzeugen · Menschen emotional abholen</p>
+      <p><strong>Regeln:</strong> 2–3 Minuten · Ohne Fachbegriffe · Persönlich, authentisch, ehrlich</p>
+    </div>
+  </div>
+  <div class="acc" id="acc-av3">
+    <div class="acc-h" onclick="toggleAcc('acc-av3')"><div class="acc-num">iii</div><div style="flex:1"><div class="acc-label">Qualifizierung</div><div class="acc-sub">Prüfen ob die Person überhaupt passt</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body">
+      <p><strong>Qualifikationsfragen:</strong> Persönliche Ziele · Berufliche Ambitionen · Bereitschaft zu lernen · Umfeld &amp; sozialer Background · Teamfähigkeit · Erstes Gefühl im Gespräch</p>
+      <div class="note">Ziel: Nur passende Menschen in den Termin bringen.</div>
+    </div>
+  </div>
+  <div class="acc" id="acc-av4">
+    <div class="acc-h" onclick="toggleAcc('acc-av4')"><div class="acc-num">iv</div><div style="flex:1"><div class="acc-label">Terminierung</div><div class="acc-sub">Konkret und verbindlich Termine vereinbaren</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body">
+      <p><strong>Arten:</strong> S1-Termin (Erstgespräch) · Karriere-Termin · Praktikumsstart · A&amp;O</p>
+      <p><strong>Standards:</strong> Termin immer direkt im Gespräch setzen · 48 Stunden vorher Bestätigung · Agenda per Mail/WhatsApp · Kalenderblock zwingend</p>
+    </div>
+  </div>
+
+  <h2>b. Beratung</h2>
+  <p>Beratung ist das zentrale Produkt. Sie folgt immer dem S-Stufen-Prozess: S1 = Erstgespräch · S2 = Konzept · S3 = Entscheidung · S4 = Umsetzung.</p>
+
+  <h3>i. Beratungsprozess</h3>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">S1 – Erstgespräch</div>
+      <ul><li>IST-Analyse</li><li>Zielbild definieren</li><li>Finanzhaushalt aufnehmen</li><li>Erwartungshaltung klären</li></ul>
+    </div>
+    <div class="card">
+      <div class="card-title">S2 – Konzepttermin</div>
+      <ul><li>Anbieter- &amp; Tarifvergleich</li><li>Gegenüberstellung IST vs. SOLL</li><li>Maßnahmen priorisieren</li><li>Lösungen transparent erklären</li></ul>
+    </div>
+    <div class="card">
+      <div class="card-title">S3 – Entscheidung</div>
+      <ul><li>Kundensituation final prüfen</li><li>Offene Fragen klären</li><li>Empfehlungen gemeinsam durchgehen</li><li>Entscheidung ermöglichen</li></ul>
+    </div>
+    <div class="card">
+      <div class="card-title">S4 – Umsetzung</div>
+      <ul><li>Abschluss</li><li>Technische Schritte</li><li>Unterlagen &amp; Dokumentation</li><li>After-Sales &amp; Servicekontakt</li></ul>
+    </div>
+  </div>
+
+  <h3>ii. Aufbau von Kundenbestand</h3>
+  <p>Ein langfristiger Bestand entsteht durch: Jährliche Servicegespräche · Follow-Ups · Optimierungen · Lebensereignisse · Empfehlungen · hochwertige Betreuung.</p>
+  <div class="note">Ziel: Bestandskunden werden zu Empfehlungsgebern.</div>
+
+  <h3>iii. Empfehlungen</h3>
+  <p>Empfehlungen sind der stabilste Weg, neue Kunden zu gewinnen.</p>
+  <ul>
+    <li>Immer nach Empfehlungen fragen</li>
+    <li>Besonders nach erfolgreichen S2/S3/S4</li>
+    <li>Empfehlungen direkt terminieren</li>
+    <li>Qualität &gt; Quantität</li>
+  </ul>
+
+  <h2>c. Partner einstellen &amp; entwickeln</h2>
+  <p>Der Teamaufbau folgt einem klaren Prozess: Person finden → Qualifizieren → Karrieregespräch/Praktikum → Einarbeitung &amp; Ausbildung.</p>
+
+  <div class="acc open" id="acc-pe1">
+    <div class="acc-h" onclick="toggleAcc('acc-pe1')"><div class="acc-num">i</div><div style="flex:1"><div class="acc-label">Partner finden</div><div class="acc-sub">Quellen für neue Teammitglieder</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p><strong>Quellen:</strong> Persönliches Umfeld · Social Media · Events &amp; Networking · Empfehlungen · tecis.PLUS · Kunden, die passen</p><div class="note">Ziel: Menschen mit Potenzial identifizieren.</div></div>
+  </div>
+  <div class="acc" id="acc-pe2">
+    <div class="acc-h" onclick="toggleAcc('acc-pe2')"><div class="acc-num">ii</div><div style="flex:1"><div class="acc-label">Qualifizierung eines Partners</div><div class="acc-sub">Passt diese Person zu uns?</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p><strong>Fragen:</strong> Persönliche Ziele · Arbeitsmoral · Lernbereitschaft · Verantwortungsgefühl · Werte · Vorstellung vom Berufsleben</p><div class="note">Nur wenn jemand motiviert, wertorientiert und entwicklungsbereit ist, startet er.</div></div>
+  </div>
+  <div class="acc" id="acc-pe3">
+    <div class="acc-h" onclick="toggleAcc('acc-pe3')"><div class="acc-num">iii</div><div style="flex:1"><div class="acc-label">Praktikum</div><div class="acc-sub">Einblick in Unternehmensmodell &amp; Kultur</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p><strong>Ziel:</strong> Einblick in Unternehmensmodell · Arbeitsabläufe · Teamkultur · Potenziale · System &amp; Mindset</p><p><strong>Standards:</strong> Shadowing · Mini-Aufgaben · Reflexionsgespräche · Entscheidungsfindung innerhalb 1 Woche</p></div>
+  </div>
+  <div class="acc" id="acc-pe4">
+    <div class="acc-h" onclick="toggleAcc('acc-pe4')"><div class="acc-num">iv</div><div style="flex:1"><div class="acc-label">Einarbeitung</div><div class="acc-sub">Strukturierter Weg zur vollen Einsatzfähigkeit</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body"><p>Die Einarbeitung erfolgt über: 12-Wochen-Plan · tägliche Aufgaben · Shadowing · A&amp;O · Grundlagen Vertrieb · Grundlagen Beratung · §34d-Vorbereitung · eCampus &amp; Infothek.</p><div class="note">Ziel: Der neue Partner ist innerhalb weniger Wochen voll einsetzbar.</div></div>
+  </div>
+
+  <h2>d. Führung</h2>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">i. Basics der Führung</div>
+      <ul>
+        <li>Vorbild sein – nicht nur reden, sondern vorleben</li>
+        <li>Klare Erwartungen kommunizieren</li>
+        <li>Regelmäßiges, ehrliches Feedback geben</li>
+        <li>Verbindlichkeit einfordern, aber auch selbst leben</li>
+        <li>Entwicklung der Teammitglieder aktiv fördern</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">ii. Rollenverständnis</div>
+      <ul>
+        <li>Du bist Mentor, nicht nur Vorgesetzter</li>
+        <li>Du trägst Verantwortung für Ausbildung und Qualität</li>
+        <li>Du bist Vorbild für Auftreten, Disziplin und Werte</li>
+        <li>Du förderst Eigenverantwortung statt Abhängigkeit</li>
+        <li>Dein Erfolg misst sich am Erfolg deines Teams</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 14</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 16 – IHK §34d &amp; §34f &#8594;</button>
+  </div>
+</div>
+<!-- ══ 16: IHK ══ -->
+<div class="chapter" id="ch-16">
+  <div class="chap-label">Kapitel 16 · Unternehmen &amp; System</div>
+  <div class="chap-title">IHK §34d &amp; §34f GewO</div>
+  <div class="chap-lead">Deine fachliche Grundlage für professionelle Beratung &amp; Karriereentwicklung. Um in der Finanzdienstleistung selbstständig tätig zu sein, benötigst du gesetzlich vorgeschriebene Qualifikationen.</div>
+
+  <div class="note note-pink">Bei uns sind das vor allem: <strong>§34d GewO</strong> → Versicherungsvermittlung (Grundlage für Juniorberater) und <strong>§34f GewO</strong> → Finanzanlagenvermittlung (Grundlage für Seniorberater &amp; höhere Stufen, sowie Voraussetzung für Teamleiter).</div>
+
+  <h2>a. Struktur</h2>
+
+  <h3>1️⃣ §34d GewO – Versicherungsvermittlung</h3>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Zweck der Qualifikation</div>
+      <p>Der §34d erlaubt dir, Kunden im Bereich der Versicherungen zu beraten und zu vermitteln. Er ist die erste fachliche Hürde und Voraussetzung für die Stufe Juniorberater.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Prüfungsaufbau</div>
+      <ul><li>IHK-Fachkundeprüfung</li><li>Schriftlicher Teil</li><li>Mündlicher/praktischer Teil (Kundengesprächssimulation)</li></ul>
+    </div>
+  </div>
+  <p><strong>Inhalte (Auszug):</strong> Versicherungsarten (Sach-, Haftpflicht-, Lebens-, Krankenversicherung etc.) · Rechtsgrundlagen · Bedarfsermittlung · Versicherungsvertrag &amp; Bedingungen · Beratungsdokumentation · Umgang mit Kunden · Datenschutz &amp; Compliance.</p>
+
+  <h3>2️⃣ §34f GewO – Finanzanlagenvermittlung</h3>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Zweck der Qualifikation</div>
+      <p>Der §34f ermöglicht dir die Beratung im Bereich: Investmentfonds · Altersvorsorgeprodukte · Finanzanlagen je nach Kategorie (1–3). Er ist Voraussetzung für Seniorberater, <strong>Teamleiter</strong>, die Führungskarriere und vollständige ganzheitliche Beratung.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Prüfungsaufbau</div>
+      <ul><li>IHK-Sachkundeprüfung</li><li>Modulstruktur je nach Kategorie</li><li>Schriftlicher Wissenstest</li><li>Fallstudienbestehung</li></ul>
+    </div>
+  </div>
+  <p><strong>Inhalte (Auszug):</strong> Investmentgrundlagen · Risikoarten · Fondsarten &amp; Kapitalmärkte · Assetklassen · Kostenstrukturen · Beratungsprotokoll · Geeignetheitsprüfung · Rechts- &amp; Steuergrundlagen (Basis).</p>
+
+  <h2>b. Lernplan (Schritt für Schritt)</h2>
+  <div class="note">Bewährt. Klar. Strukturiert. Erfolgreich.</div>
+
+  <h3>1️⃣ Lernplan für §34d (6–12 Wochen)</h3>
+  <table>
+    <tr><th>Woche</th><th>Thema</th></tr>
+    <tr><td>1–2</td><td><strong>Grundlagen:</strong> Einführung in Versicherungsprodukte · Unterschiede Sach/Haftpflicht/Leben/KV · Funktionsweise eines Versicherungsvertrages · Lesen &amp; Verstehen von AVB</td></tr>
+    <tr><td>3–4</td><td><strong>Recht &amp; Regulierung:</strong> Versicherungsvertragsgesetz · Beratungs- &amp; Dokumentationspflicht · Datenschutz · IDD-Regeln · Aufgaben eines Vermittlers</td></tr>
+    <tr><td>5–6</td><td><strong>Bedarfsanalyse:</strong> Kundentypen · Bedarfsclusters · Risikoprofile · Fallbeispiele</td></tr>
+    <tr><td>7–8</td><td><strong>Prüfungstraining:</strong> Offizielle IHK-Fragen üben · Multiple Choice-Training · Prüfungssimulation · Fallstudien</td></tr>
+    <tr><td>9–12 (optional)</td><td><strong>Vertiefung:</strong> Schwachstellenanalyse · Wiederholung der komplexen Themen · Prüfung komplett durchsimulieren</td></tr>
+  </table>
+
+  <h3>2️⃣ Lernplan für §34f (8–16 Wochen)</h3>
+  <table>
+    <tr><th>Woche</th><th>Thema</th></tr>
+    <tr><td>1–2</td><td><strong>Grundlagen Investment:</strong> Finanzmärkte · Volatilität · Risikoarten · Portfolioaufbau</td></tr>
+    <tr><td>3–6</td><td><strong>Produktwelt:</strong> Fondsarten (Aktienfonds, Rentenfonds, Mischfonds) · ETF-Grundlagen · Kostenstrukturen · Chancen/Risiken · Assetklassen · Kapitalmarktmodelle</td></tr>
+    <tr><td>7–10</td><td><strong>Recht &amp; Pflichten:</strong> WpHG (Grundlagen) · Beratungs- &amp; Dokumentationspflicht · Geeignetheitsprüfung · Steuern (Basiswissen) · Anlegerschutz</td></tr>
+    <tr><td>11–14</td><td><strong>Fallstudien &amp; Beratungspraxis:</strong> Fallstudien lösen · Kundenprofile analysieren · Risikoaufklärung · Geeignetheitsprüfung zuordnen · Szenarioanalysen</td></tr>
+    <tr><td>15–16</td><td><strong>Prüfungsvorbereitung:</strong> Beispielprüfungen · Fachfragen · Prüfungssimulation · Zeitmanagement</td></tr>
+  </table>
+
+  <h2>c. Tipps &amp; Tricks – für schnelles, erfolgreiches Bestehen</h2>
+
+  <h3>1️⃣ Lernmethodik</h3>
+  <div class="dd">
+    <div class="do-box"><h4>Do's</h4><ul>
+      <li>Lerne jeden Tag 30–60 Minuten (Konstanz &gt; Intensität)</li>
+      <li>Arbeite mit Karteikarten (Analog oder Apps wie Anki)</li>
+      <li>Bearbeite offizielle IHK-Fragen frühzeitig</li>
+      <li>Erkläre Inhalte anderen → du merkst sofort, was du verstanden hast</li>
+      <li>Nutze YouTube-Erklärvideos für Gesetzesthemen</li>
+    </ul></div>
+    <div class="dont-box"><h4>Don'ts</h4><ul>
+      <li>Nicht „auf den letzten Drücker" lernen</li>
+      <li>Kein Auswendiglernen ohne Verständnis</li>
+      <li>Keine Pause zwischen Themenblöcken von mehr als 7 Tagen</li>
+    </ul></div>
+  </div>
+
+  <h3>2️⃣ Vorbereitung auf die Prüfung</h3>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Schriftlich</div>
+      <ul><li>Trainiere Multiple-Choice mit Zeitlimit</li><li>Verwende ausschließlich IHK-konforme Fragen</li><li>Fokus: Verständnis + Wiederholung</li></ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Mündlich (für §34d)</div>
+      <ul><li>Kundenfall laut erklären</li><li>Struktur anwenden: 1. Bedarf 2. Risiko 3. Empfehlung 4. Dokumentation</li><li>Klar &amp; ruhig sprechen</li></ul>
+    </div>
+  </div>
+
+  <h3>3️⃣ Verhalten am Prüfungstag</h3>
+  <ul>
+    <li>30–45 Minuten früher da sein</li>
+    <li>Berechtigungspapiere vorbereitet</li>
+    <li>Stress vermeiden – ruhige Atmung</li>
+    <li>Pro Frage 30–60 Sekunden einplanen</li>
+    <li>Keine Panik, wenn du eine Frage nicht weißt → markieren &amp; weiter</li>
+  </ul>
+
+  <h3>4️⃣ Häufige Fehler</h3>
+  <div class="note note-pink">
+    Gesetze nicht verstanden → nur auswendig gelernt · Produktwissen ohne Anwendungsbezug · Falsches Zeitmanagement · Zu spät angefangen · Keine Fallstudien geübt
+  </div>
+
+  <div class="note note-green">
+    <strong>🎯 Ergebnis:</strong> Mit dieser Struktur hat jeder Partner klare Lernabschnitte, klare Anforderungen, klare Zeitvorgaben, klare Standards — und weiß exakt, wie er seinen §34d und §34f effizient und sicher besteht.
+  </div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 15</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 17 – Performance &#8594;</button>
+  </div>
+</div>
+<!-- ══ 17: PERFORMANCE ══ -->
+<div class="chapter" id="ch-17">
+  <div class="chap-label">Kapitel 17 · Entwicklung &amp; Ziele</div>
+  <div class="chap-title">Persönlichkeitsentwicklung &amp; Performance</div>
+  <div class="chap-lead">Der 30-60-90 Tage Plan ist eine strukturierte Entwicklungs-Roadmap und basiert direkt auf den Trainee- und BA-Aufgaben aus deinem offiziellen Aufgabenprofil. Ziel: Nach 90 Tagen vollständig BA-fähig.</div>
+
+  <h2>a. 30-60-90 Tage Plan</h2>
+
+  <div class="acc open" id="acc-p1">
+    <div class="acc-h" onclick="toggleAcc('acc-p1')"><div class="acc-num" style="background:var(--cyan)">1</div><div style="flex:1"><div class="acc-label">Phase 1 — 0–30 Tage (Trainee-Grundlagen)</div><div class="acc-sub">Orientierung, Systemverständnis, erste Fähigkeiten</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body">
+      <p><strong>Schwerpunkte gemäß Aufgabenprofil:</strong></p>
+      <ul>
+        <li>Toolführerschein + Infothek sicher anwenden</li>
+        <li>Angebots- &amp; Vergleichssoftware verstehen</li>
+        <li>Potenzialliste (30er Umfeld) erstellen</li>
+        <li>Terminierung über Big 5 + Events kennenlernen</li>
+        <li>Einwandbehandlung Basic</li>
+        <li>PR-Story sicher erzählen können</li>
+        <li>Startkonzept gesehen &amp; verstanden</li>
+        <li>Kalenderführung &amp; Organisation</li>
+        <li>Selbstständige Lernmotivation zeigen</li>
+      </ul>
+      <div class="note note-green"><strong>Ergebnis nach 30 Tagen:</strong> Du kennst das System. Du kannst Gespräche vorbereiten. Du hast eine funktionierende Potenzialbasis.</div>
+    </div>
+  </div>
+
+  <div class="acc" id="acc-p2">
+    <div class="acc-h" onclick="toggleAcc('acc-p2')"><div class="acc-num" style="background:#7C3AED">2</div><div style="flex:1"><div class="acc-label">Phase 2 — 30–60 Tage (Trainee → BA-Übergang)</div><div class="acc-sub">Erste eigenständige Aufgaben in Begleitung</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body">
+      <p><strong>BA-relevante Aufgaben aus deinem Profil (in Begleitung!):</strong></p>
+      <ul>
+        <li>S1 selbst führen inkl. Datenaufnahme (mit FK)</li>
+        <li>Regelmäßiges gemeinsames oder selbstständiges Terminieren</li>
+        <li>Einwandbehandlung Advanced vorbereiten</li>
+        <li>Potenzialliste erweitern (Ziel: 300–500 Kontakte)</li>
+        <li>Teile des S2 übernehmen (mit FK)</li>
+        <li>Standardkonzepte verstehen (Azubi, Student, Angestellter mit BU, KTG, AV, Sparplan)</li>
+        <li>Datenaufnahme vollständig &amp; korrekt</li>
+        <li>Fachliche Weiterbildung beginnen (Vorsorge, Investment)</li>
+        <li>Start IHK §34d</li>
+        <li>BEG (Begeisterungsgespräch) erlernen</li>
+        <li>Erste Ausbildungsanteile (Basics weitergeben)</li>
+        <li>Umsatz korrekt melden üben (AzA+ im tIS)</li>
+      </ul>
+      <div class="note note-green"><strong>Ergebnis nach 60 Tagen:</strong> Du kannst S1 + Datenaufnahme sicher. Du verstehst Basis-Konzepte. Du kannst sauber terminieren.</div>
+    </div>
+  </div>
+
+  <div class="acc" id="acc-p3">
+    <div class="acc-h" onclick="toggleAcc('acc-p3')"><div class="acc-num" style="background:var(--green)">3</div><div style="flex:1"><div class="acc-label">Phase 3 — 60–90 Tage (Ziel: BA-Level vollständig)</div><div class="acc-sub">Alle 14 BA-Anforderungen sicher &amp; eigenständig erfüllen</div></div><svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="acc-body">
+      <p><strong>Pflichtkompetenzen lt. Aufgabenprofil BA:</strong></p>
+      <ul>
+        <li>S1 sicher eigenständig (Begleitung optional)</li>
+        <li>Selbstständiges Terminieren ohne Impulse von außen</li>
+        <li>Einwandbehandlung Advanced sicher anwenden</li>
+        <li>Potenzialliste vollständig &amp; sauber (300–500)</li>
+        <li>S2-Teile selbstständig</li>
+        <li>Standardkonzepte vorbereiten &amp; vorstellen können</li>
+        <li>Datenaufnahme fehlerfrei</li>
+        <li>Weiterbildungen besuchen (Vorsorge, Investment)</li>
+        <li>§34d weiter bearbeiten</li>
+        <li>BEG sicher durchführen</li>
+        <li>Junge VPs in Basics anlernen</li>
+        <li>Umsätze selbst berechnen &amp; korrekt melden (AzA+)</li>
+      </ul>
+      <div class="note note-pink"><strong>Ergebnis nach 90 Tagen:</strong> Beförderung zum Beraterassistent (BA). Volle BA-Aufgabenfähigkeit erreicht.</div>
+    </div>
+  </div>
+
+  <h2>b. Aktivitätskennzahlen (KPIs)</h2>
+  <div class="note">Was gemessen wird, wird steuerbar. Diese Kennzahlen bilden die Grundlage für Coaching und Beförderung.</div>
+
+  <h3>1. Wöchentliche Pflichtkennzahlen</h3>
+  <div class="g3">
+    <div class="card">
+      <div class="card-title">🎯 Termin-KPIs</div>
+      <ul><li>S1: 4–6+ pro Woche</li><li>S2: 2–4</li><li>S3: 1–2</li><li>S4: 1–2</li></ul>
+    </div>
+    <div class="card">
+      <div class="card-title">🎯 Akquise-KPIs</div>
+      <ul><li>Neukontakte: 10–20</li><li>Potenziale: 5–10</li><li>Eigene Terminierungen: 5–8</li></ul>
+    </div>
+    <div class="card">
+      <div class="card-title">🎯 Pipeline-KPIs</div>
+      <ul><li>1–2 neue Kunden</li><li>2–3 weiterführende S-Termine</li><li>20–30 Aktivitätsaktionen</li></ul>
+    </div>
+  </div>
+
+  <h3>2. Qualitätskennzahlen</h3>
+  <ul>
+    <li>CRM vollständig</li>
+    <li>IDD-Zeiten vollständig</li>
+    <li>Kalender gepflegt</li>
+    <li>Vollständige Doku nach jedem Gespräch</li>
+  </ul>
+
+  <h2>c. Wochenstruktur &amp; Zeitmanagement</h2>
+  <p>Ein strukturierter Wochenplan sorgt für konstante Leistung.</p>
+  <table>
+    <tr><th>Tag</th><th>Aktivität</th></tr>
+    <tr><td><strong>Montag</strong></td><td>Wochenplanung · Teammeeting · Wochenmeeting · CRM · A&amp;O (wenn vorgesehen)</td></tr>
+    <tr><td><strong>Dienstag–Freitag</strong><br>10:00–13:00</td><td>Kundentermine</td></tr>
+    <tr><td>13:00–14:00</td><td>Pause</td></tr>
+    <tr><td>14:00–17:00</td><td>Kundentermine</td></tr>
+    <tr><td>17:00–18:00</td><td>CRM / Nachbereitung</td></tr>
+    <tr><td>18:00–19:00</td><td>Potenziale / Terminierung</td></tr>
+    <tr><td><strong>Samstag (optional)</strong></td><td>Nebenberuflertag · Fachausbildung · Fokusarbeit</td></tr>
+  </table>
+
+  <div class="dd">
+    <div class="do-box"><h4>Zeitmanagement Do's</h4><ul>
+      <li>Pufferzeiten blocken</li>
+      <li>CRM sofort pflegen</li>
+      <li>Prioritäten täglich definieren</li>
+      <li>Termine 48h vorher bestätigen</li>
+    </ul></div>
+    <div class="dont-box"><h4>Don'ts</h4><ul>
+      <li>Leere Kalenderblöcke</li>
+      <li>Doppelbuchungen</li>
+      <li>Unvorbereitete Gespräche</li>
+      <li>Spontane Absagen</li>
+    </ul></div>
+  </div>
+
+  <h2>d. Routinen &amp; Disziplin</h2>
+  <div class="note note-pink">Erfolg entsteht nicht durch Motivation, sondern durch Systeme.</div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Tägliche Routinen</div>
+      <ul>
+        <li>Morgenreview 5–10 Min</li>
+        <li>CRM nach jedem Gespräch</li>
+        <li>60–90 Min Potenzialarbeit</li>
+        <li>20–30 Min Weiterbildung (eCampus, Fachthemen)</li>
+        <li>Follow-Up-Slot</li>
+        <li>Abendreview</li>
+      </ul>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px">Viele Aufgaben aus dem Trainee- und BA-Profil erfordern tägliche Wiederholung (PR-Story, Terminierung, Einwandbehandlung) — dadurch entsteht System-Sicherheit.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Wöchentliche Routinen</div>
+      <ul>
+        <li>A&amp;O vorbereiten</li>
+        <li>Wochenziele + Wochenplanung</li>
+        <li>1 großer Lernblock (90 Min+)</li>
+        <li>Teilnahme an Schulungen</li>
+        <li>Sport 3–5×</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note"><strong>Disziplin-Regeln:</strong> Systeme befolgen (S-Stufen, CRM, Kalender) · Deadlines einhalten · Keine Ausreden · Selbstverantwortung statt Opferhaltung</div>
+
+  <h2>e. Energie- &amp; Selbstmanagement</h2>
+  <div class="note note-pink">Ohne Energie gibt es keine Leistung.</div>
+
+  <div class="g4">
+    <div class="gc">
+      <div class="gc-label">1. Physische Energie</div>
+      <div class="gc-text">Schlaf 7–8 Std · Sport 3–5× /Woche · Wasser 2–3L/Tag · Ernährung bewusst &amp; proteinreich</div>
+    </div>
+    <div class="gc">
+      <div class="gc-label">2. Mentale Energie</div>
+      <div class="gc-text">Fokusblöcke ohne Ablenkung · Handyfreie Zeiten · Journaling/Zielsetzung · Meditation/Atemübungen</div>
+    </div>
+    <div class="gc">
+      <div class="gc-label">3. Emotionale Energie</div>
+      <div class="gc-text">Austausch im Team · bewusste Pausen · klare Grenzen (Work-Life Balance) · Hobbys &amp; Ausgleich</div>
+    </div>
+    <div class="gc">
+      <div class="gc-label">4. Unternehmerische Energie</div>
+      <div class="gc-text">Eigenes WHY präsent halten · Erfolgsmomente dokumentieren · Entscheidungen treffen statt schieben · konsequent nachjustieren</div>
+    </div>
+  </div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 16</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 18 – Benchmark nach 2 Jahren &#8594;</button>
+  </div>
+</div>
+<!-- ══ 18: BENCHMARK ══ -->
+<div class="chapter" id="ch-18">
+  <div class="chap-label">Kapitel 18 · Entwicklung &amp; Ziele</div>
+  <div class="chap-title">Benchmark nach 2 Jahren tecis</div>
+  <div class="chap-lead">Was ein Partner nach 24 Monaten beherrschen, leben und vorweisen sollte. Das Ziel ist nicht Perfektion, sondern Prozesssicherheit, Professionalität und unternehmerische Eigenständigkeit.</div>
+
+  <div class="note" style="margin-bottom:20px">Alle drei Bereiche greifen ineinander: fachliches Wissen ohne Persönlichkeit funktioniert nicht, Persönlichkeit ohne Struktur hat keinen Output, Vertrieb ohne System führt nicht zu Stabilität.</div>
+
+  <div class="acc open" id="acc-bm1">
+    <div class="acc-h" onclick="toggleAcc('acc-bm1')">
+      <div class="acc-num">1</div>
+      <div style="flex:1"><div class="acc-label">Vertriebliche Kompetenzen</div><div class="acc-sub">Prozesssicherheit, Abschlusskraft &amp; Kundenführung</div></div>
+      <svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="acc-body">
+      <h3>S-Stufen-Sicherheit</h3>
+      <table>
+        <tr><th>Stufe</th><th>Kompetenzen nach 2 Jahren</th></tr>
+        <tr><td><strong>S1</strong></td><td>IST-Analyse sicher · Zielbild definieren · Finanzhaushalt aufnehmen · Bedarf erkennen</td></tr>
+        <tr><td><strong>S2</strong></td><td>Angebotsvergleich erklären · IST vs. SOLL darstellen · Maßnahmen priorisieren · Entscheidungsreife schaffen</td></tr>
+        <tr><td><strong>S3</strong></td><td>Offene Fragen klären · Entscheidungsführung: ruhig, klar, souverän · Druck vermeiden</td></tr>
+        <tr><td><strong>S4</strong></td><td>Anträge sauber durchgehen · vollständige Dokumentation · After-Sales</td></tr>
+      </table>
+      <h3 style="margin-top:16px">Zielstandards (Richtwerte)</h3>
+      <ul><li>4–6+ S1-Termine pro Woche</li><li>2–4 S2-Termine</li><li>1–3 Abschlüsse pro Woche</li><li>10–20 Neukontakte</li><li>Eigenständige Terminierung</li><li>Saubere Pipeline-Struktur</li></ul>
+      <h3 style="margin-top:16px">Bestandskundenmanagement</h3>
+      <ul><li>Jährliche/halbjjährliche Reviews</li><li>Serviceprozesse sicher</li><li>Upgrades &amp; Optimierungen transparent durchführen</li><li>Empfehlungslogik aktiv nutzen</li></ul>
+    </div>
+  </div>
+
+  <div class="acc" id="acc-bm2">
+    <div class="acc-h" onclick="toggleAcc('acc-bm2')">
+      <div class="acc-num">2</div>
+      <div style="flex:1"><div class="acc-label">Fachliche Kompetenzen</div><div class="acc-sub">Qualifikationen, Produktwissen &amp; Dokumentationssicherheit</div></div>
+      <svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="acc-body">
+      <h3>Gesetzliche Qualifikationen</h3>
+      <ul><li>§34d GewO (Versicherungen) bestanden</li><li>§34f (1–3) GewO in Arbeit oder abgeschlossen</li><li>IDD-Pflichten vollständig erfüllt</li><li>Datenschutz- &amp; Compliance-Verständnis</li></ul>
+      <h3 style="margin-top:16px">Produktwissen</h3>
+      <table>
+        <tr><th>Bereich</th><th>Themen</th></tr>
+        <tr><td><strong>Absicherung</strong></td><td>Berufsunfähigkeit · Risikoabsicherung · Krankenversicherung · Sachversicherungen · biometrische Risiken</td></tr>
+        <tr><td><strong>Altersvorsorge</strong></td><td>Schicht 1–3 Grundverständnis · Garantien, Kosten, Risiken erklären · nachhaltige Vorsorgelogik</td></tr>
+        <tr><td><strong>Investment</strong></td><td>Fonds, ETFs, Assetklassen · Chancen &amp; Risiken · Portfolioaufbau · langfristige Sparpläne</td></tr>
+        <tr><td><strong>Liquidität</strong></td><td>Haushaltsplanung · Notgroschen · Cashflow-Optimierung</td></tr>
+      </table>
+      <h3 style="margin-top:16px">Tools &amp; Dokumentation</h3>
+      <ul><li>CRM vollständige Souveränität</li><li>Angebotsrechner &amp; Vergleichsprogramme</li><li>Beratungsdokumentation rechtssicher</li><li>Geeignetheitsprf. korrekt durchführen</li><li>M365, Teams &amp; interne Apps (tecis.one)</li></ul>
+    </div>
+  </div>
+
+  <div class="acc" id="acc-bm3">
+    <div class="acc-h" onclick="toggleAcc('acc-bm3')">
+      <div class="acc-num">3</div>
+      <div style="flex:1"><div class="acc-label">Persönliche Kompetenzen</div><div class="acc-sub">Mindset, Selbstführung, Unternehmertum &amp; Teamrolle</div></div>
+      <svg class="acc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="acc-body">
+      <div class="g2">
+        <div>
+          <h3>Unternehmerisches Denken</h3>
+          <ul><li>Entscheidungen treffen statt warten</li><li>Verantwortung statt Ausreden</li><li>Prioritäten setzen statt "busy sein"</li><li>Chancen nutzen statt passiv bleiben</li></ul>
+          <h3 style="margin-top:14px">Selbstführung</h3>
+          <ul><li>Strukturierter Kalender</li><li>Planung (Monat/Woche/Tag)</li><li>Deadlines einhalten</li><li>Reporting verlässlich (A&amp;O)</li><li>Stabile Routinen</li></ul>
+          <h3 style="margin-top:14px">Emotionale Stärke</h3>
+          <ul><li>Rückschläge verarbeiten können</li><li>Drucksituationen aushalten</li><li>Motivation selbst erzeugen</li><li>Durchhaltevermögen aufbauen</li></ul>
+        </div>
+        <div>
+          <h3>Kommunikationskompetenz</h3>
+          <ul><li>Klar, direkt, wertschätzend</li><li>Konflikte konstruktiv lösen</li><li>Feedback geben &amp; annehmen</li><li>Kunden- und Teammotivation</li></ul>
+          <h3 style="margin-top:14px">Teamkompetenz</h3>
+          <ul><li>Vorbildverhalten</li><li>Erste Ausbildungsanteile übernehmen</li><li>Zusammenarbeit fördern</li><li>Kultur &amp; Werte leben</li></ul>
+          <h3 style="margin-top:14px">Stabilität &amp; Energie</h3>
+          <ul><li>Sport, Schlaf, Ernährung</li><li>Mentale Hygiene</li><li>Klare Grenzen &amp; Selbstschutz</li><li>Fokus statt Ablenkung</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note note-green" style="margin-top:16px">
+    <strong>Fazit nach 2 Jahren:</strong> Ein Partner der vertrieblich sicher, fachlich fundiert, persönlich gereift, selbständig organisiert, unternehmerisch denkend und systemtreu arbeitet, legt die Grundlage für: Teamleiter / Sales Consultant · langfristigen Vermögensaufbau · Unternehmertum mit allen Vorzügen · nachhaltige Skalierung.
+  </div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 17</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 19 – Zieldefinition &#8594;</button>
+  </div>
+</div>
+
+<!-- ══ 19: ZIELDEFINITION ══ -->
+<div class="chapter" id="ch-19">
+  <div class="chap-label">Kapitel 19 · Entwicklung &amp; Ziele</div>
+  <div class="chap-title">Persönliche Zieldefinition</div>
+  <div class="chap-lead">Der größte Erfolgsfaktor bei tecis sind klar definierte, persönliche Ziele, die auf deiner eigenen Vision, Motivation und deinem gewünschten Lebensstil basieren. Füll dieses Workbook aus – ehrlich, konkret, mit Herz.</div>
+
+  <h2>a. Einkommensziel – Mein Leben in 24 Monaten</h2>
+  <p><strong>Frage:</strong> Wie soll mein Einkommen aussehen, wenn ich 2 Jahre im System bin?</p>
+  <div class="card">
+    <div class="card-title">1️⃣ Reflexion – Wie möchte ich leben?</div>
+    <table>
+      <tr><th>Frage</th><th>Meine Antwort</th></tr>
+      <tr><td>Wie sieht mein gewünschter monatlicher Lebensstil aus?</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" placeholder="z.B. eigene Wohnung, Auto, Reisen..." oninput="save('zi1',this.value)" id="zi1"></td></tr>
+      <tr><td>Welche finanziellen Freiheiten möchte ich erreichen?</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" placeholder="z.B. Investitionen, Rücklagen..." oninput="save('zi2',this.value)" id="zi2"></td></tr>
+      <tr><td>Ich möchte nach 2 Jahren ein monatliches Einkommen von:</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" placeholder="€ __________" oninput="save('zi3',this.value)" id="zi3"></td></tr>
+      <tr><td>Ich möchte pro Jahr investieren/sparen:</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" placeholder="€ __________" oninput="save('zi4',this.value)" id="zi4"></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2️⃣ 2-Jahres Einkommensziele – Workbook Vorlage</div>
+    <div class="g2">
+      <div>
+        <h3 style="margin-top:0">Monatsziele</h3>
+        <table>
+          <tr><td>Monatliches Nettoziel</td><td>€ <input style="border:none;border-bottom:1px solid var(--border);outline:none;width:90px;font-family:'DM Sans',sans-serif;font-size:13px" oninput="save('zi5',this.value)" id="zi5"></td></tr>
+          <tr><td>Monatliche Spar-/Investquote</td><td>€ <input style="border:none;border-bottom:1px solid var(--border);outline:none;width:90px;font-family:'DM Sans',sans-serif;font-size:13px" oninput="save('zi6',this.value)" id="zi6"></td></tr>
+          <tr><td>Monatliche Rücklagen</td><td>€ <input style="border:none;border-bottom:1px solid var(--border);outline:none;width:90px;font-family:'DM Sans',sans-serif;font-size:13px" oninput="save('zi7',this.value)" id="zi7"></td></tr>
+          <tr><td>Einnahmen aus Bestand/Service</td><td>€ <input style="border:none;border-bottom:1px solid var(--border);outline:none;width:90px;font-family:'DM Sans',sans-serif;font-size:13px" oninput="save('zi8',this.value)" id="zi8"></td></tr>
+        </table>
+      </div>
+      <div>
+        <h3 style="margin-top:0">Jahresziele</h3>
+        <table>
+          <tr><td>Jahresnetto</td><td>€ <input style="border:none;border-bottom:1px solid var(--border);outline:none;width:90px;font-family:'DM Sans',sans-serif;font-size:13px" oninput="save('zi9',this.value)" id="zi9"></td></tr>
+          <tr><td>Jahresinvestitionen</td><td>€ <input style="border:none;border-bottom:1px solid var(--border);outline:none;width:90px;font-family:'DM Sans',sans-serif;font-size:13px" oninput="save('zi10',this.value)" id="zi10"></td></tr>
+          <tr><td>Rücklagenaufbau gesamt</td><td>€ <input style="border:none;border-bottom:1px solid var(--border);outline:none;width:90px;font-family:'DM Sans',sans-serif;font-size:13px" oninput="save('zi11',this.value)" id="zi11"></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <h2>b. Karriereziel – Wo will ich nach 2 Jahren stehen?</h2>
+  <p><strong>Frage:</strong> Welche Position möchte ich nach zwei Jahren erreicht haben? Und warum genau diese?</p>
+  <div class="card">
+    <div class="card-title">1️⃣ Reflexion – Mein persönlicher Karriereweg</div>
+    <table>
+      <tr><th>Frage</th><th>Meine Antwort</th></tr>
+      <tr><td>Welche Karrierestufe nach 24 Monaten?</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" placeholder="z.B. Seniorberater, Teamleiter..." oninput="save('zk1',this.value)" id="zk1"></td></tr>
+      <tr><td>Warum ist diese Stufe wichtig für mich?</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" placeholder="..." oninput="save('zk2',this.value)" id="zk2"></td></tr>
+      <tr><td>Welche Fähigkeiten muss ich dafür erlernen?</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" placeholder="..." oninput="save('zk3',this.value)" id="zk3"></td></tr>
+      <tr><td>Heute stehe ich auf Stufe:</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" placeholder="..." oninput="save('zk4',this.value)" id="zk4"></td></tr>
+      <tr><td>In 12 Monaten will ich auf Stufe:</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" placeholder="..." oninput="save('zk5',this.value)" id="zk5"></td></tr>
+      <tr><td>In 24 Monaten will ich auf Stufe:</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" placeholder="..." oninput="save('zk6',this.value)" id="zk6"></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">So werde ich sichtbar und beförderungsfähig</div>
+    <table>
+      <tr><td>Verantwortung übernehmen</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" oninput="save('zk7',this.value)" id="zk7"></td></tr>
+      <tr><td>Prozesse sicher beherrschen</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" oninput="save('zk8',this.value)" id="zk8"></td></tr>
+      <tr><td>Ergebnisse vorzeigen</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" oninput="save('zk9',this.value)" id="zk9"></td></tr>
+    </table>
+  </div>
+
+  <h2>c. Teamaufbauziel – Mit wem möchte ich wachsen?</h2>
+  <p><strong>Frage:</strong> Wie soll mein Team nach zwei Jahren aussehen? Wie groß? Welche Menschen? Welche Kultur?</p>
+  <div class="card">
+    <div class="card-title">1️⃣ Reflexion – Mein Wunschteam</div>
+    <table>
+      <tr><th>Frage</th><th>Meine Antwort</th></tr>
+      <tr><td>Wie viele direkte Partner in 24 Monaten?</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" placeholder="X Partner" oninput="save('zt1',this.value)" id="zt1"></td></tr>
+      <tr><td>Wie viele davon aktiv und selbständig?</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" placeholder="X aktive Partner" oninput="save('zt2',this.value)" id="zt2"></td></tr>
+      <tr><td>Welche Kultur soll in meinem Team herrschen?</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" placeholder="z.B. Disziplin, Gemeinschaft..." oninput="save('zt3',this.value)" id="zt3"></td></tr>
+      <tr><td>Welche Art von Menschen möchte ich entwickeln?</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" oninput="save('zt4',this.value)" id="zt4"></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2️⃣ Teamaufbau – Workbook Felder</div>
+    <div class="g2">
+      <div>
+        <h3 style="margin-top:0">In 12 Monaten</h3>
+        <table>
+          <tr><td>Direkte Partner</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:60px;font-family:'DM Sans',sans-serif;font-size:13px" oninput="save('zt5',this.value)" id="zt5"></td></tr>
+          <tr><td>Aktive Partner</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:60px;font-family:'DM Sans',sans-serif;font-size:13px" oninput="save('zt6',this.value)" id="zt6"></td></tr>
+          <tr><td>Beförderungen im Team</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:60px;font-family:'DM Sans',sans-serif;font-size:13px" oninput="save('zt7',this.value)" id="zt7"></td></tr>
+        </table>
+      </div>
+      <div>
+        <h3 style="margin-top:0">In 24 Monaten</h3>
+        <table>
+          <tr><td>Direkte Partner</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:60px;font-family:'DM Sans',sans-serif;font-size:13px" oninput="save('zt8',this.value)" id="zt8"></td></tr>
+          <tr><td>Aktive Partner</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:60px;font-family:'DM Sans',sans-serif;font-size:13px" oninput="save('zt9',this.value)" id="zt9"></td></tr>
+          <tr><td>Seniorberater/Teamleiter</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:60px;font-family:'DM Sans',sans-serif;font-size:13px" oninput="save('zt10',this.value)" id="zt10"></td></tr>
+          <tr><td>Umsatz-/Strukturziel Team</td><td>€ <input style="border:none;border-bottom:1px solid var(--border);outline:none;width:80px;font-family:'DM Sans',sans-serif;font-size:13px" oninput="save('zt11',this.value)" id="zt11"></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">So werde ich ein Leader, dem Menschen folgen wollen</div>
+    <textarea class="reflex" style="min-height:70px" oninput="save('zt12',this.value)" id="zt12"></textarea>
+  </div>
+
+  <h2>d. Persönliche Motivation &amp; Warum – Der Kern aller Ziele</h2>
+  <p><strong>Frage:</strong> Warum mache ich das alles? Was treibt mich an — heute und in 2 Jahren?</p>
+  <div class="card">
+    <div class="card-title">1️⃣ Meine Geschichte</div>
+    <table>
+      <tr><th>Frage</th><th>Meine Antwort</th></tr>
+      <tr><td>Was hat mich geprägt?</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" oninput="save('zw1',this.value)" id="zw1"></td></tr>
+      <tr><td>Welche Herausforderungen haben mich stark gemacht?</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" oninput="save('zw2',this.value)" id="zw2"></td></tr>
+      <tr><td>Was möchte ich in meinem Leben verändern?</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" oninput="save('zw3',this.value)" id="zw3"></td></tr>
+      <tr><td>Welche Ziele sollen bereits erfüllt sein?</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" oninput="save('zw5',this.value)" id="zw5"></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2️⃣ Meine Vision in 24 Monaten</div>
+    <table>
+      <tr><th>Frage</th><th>Meine Antwort</th></tr>
+      <tr><td>Wie möchte ich mich fühlen?</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" oninput="save('zw4',this.value)" id="zw4"></td></tr>
+      <tr><td>Wie soll mein Alltag aussehen?</td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" oninput="save('zw6',this.value)" id="zw6"></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">3️⃣ Mein persönliches Warum – in einem Satz</div>
+    <textarea class="reflex" style="min-height:70px" placeholder="z.B. Ich will Freiheit schaffen — für mich, meine Familie und alle, die sich auf mich verlassen." oninput="save('zw7',this.value)" id="zw7"></textarea>
+  </div>
+
+  <h2>🎯 Finale 2-Jahres-Zieldefinition</h2>
+  <div class="card">
+    <table>
+      <tr><td><strong>Mein Einkommensziel</strong></td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" oninput="save('zf1',this.value)" id="zf1"></td></tr>
+      <tr><td><strong>Meine Karrierestufe</strong></td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" oninput="save('zf2',this.value)" id="zf2"></td></tr>
+      <tr><td><strong>Mein Teamaufbauziel</strong></td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" oninput="save('zf3',this.value)" id="zf3"></td></tr>
+      <tr><td><strong>Mein persönliches Warum</strong></td><td><input style="border:none;border-bottom:1px solid var(--border);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:4px 0" oninput="save('zf4',this.value)" id="zf4"></td></tr>
+    </table>
+  </div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 18</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 20 – Compliance &#8594;</button>
+  </div>
+</div>
+
+<!-- ══ 20: COMPLIANCE ══ -->
+<div class="chapter" id="ch-20">
+  <div class="chap-label">Kapitel 20 · Entwicklung &amp; Ziele</div>
+  <div class="chap-title">Compliance &amp; Haftung</div>
+  <div class="chap-lead">Als selbständiger Finanzberater trägst du eine hohe Verantwortung. Compliance bedeutet: rechtssicher handeln, transparent kommunizieren, kundenzentriert arbeiten. Haftung bedeutet: du bist persönlich verantwortlich für jede Beratung.</div>
+
+  <h2>a. DSGVO &amp; Datenschutz</h2>
+  <div class="dd">
+    <div class="do-box"><h4>Do’s</h4><ul>
+      <li>Kundendaten nur im CRM erfassen</li>
+      <li>Datenschutzerklärung vor jeder Beratung einholen</li>
+      <li>Regelmäßige Updates durchführen</li>
+      <li>Nur geprüfte Endgeräte nutzen</li>
+      <li>Sichere WLAN-Verbindungen verwenden</li>
+    </ul></div>
+    <div class="dont-box"><h4>Don’ts</h4><ul>
+      <li>Keine Kundendaten über WhatsApp, SMS oder private E-Mail</li>
+      <li>Keine Screenshots von Kundendaten</li>
+      <li>Keine Daten an Dritte (Familie, Freunde) weitergeben</li>
+      <li>Keine Ausdrucke ohne sicheren Aufbewahrungsort</li>
+      <li>Keine Videos oder Fotos aus Beratungsgesprächen</li>
+    </ul></div>
+  </div>
+
+  <div class="note"><strong>Kundeneinwilligung:</strong> Bevor du Daten nutzt oder speicherst, brauchst du eine gültige Einwilligung: Schutzbrief · Erstinformation · Datenschutzerklärung · Geeignetheitsprf. Ohne Einwilligung → keine Beratung, keine Datenerfassung.</div>
+
+  <h2>b. Beratungsdokumentation (rechtliche Pflicht)</h2>
+  <p>Alles was im Gespräch passiert, muss dokumentiert sein. Fehlt Dokumentation – entsteht Haftungsrisiko.</p>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Pflichtinhalte der Dokumentation</div>
+      <ul>
+        <li>Bedarfsermittlung</li>
+        <li>Risikoanalyse</li>
+        <li>Produktvergleiche</li>
+        <li>Gründe für die Empfehlung</li>
+        <li>Alternativen die geprüft wurden</li>
+        <li>Risiken &amp; Kosten</li>
+        <li>Kundenentscheidung</li>
+        <li>Unterschriften &amp; Freigaben</li>
+        <li>IDD-Zeiten</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Geeignetheitsprf. – Nachweis</div>
+      <p>Du musst jederzeit nachweisen können:</p>
+      <ul>
+        <li>Warum wurde dieses Produkt empfohlen?</li>
+        <li>Welche Alternativen wurden geprüft?</li>
+        <li>Warum passt es zu diesem Kundenprofil?</li>
+      </ul>
+      <div class="note" style="margin-top:10px">Wenn das nicht klar dokumentiert ist → haftest du persönlich.</div>
+    </div>
+  </div>
+
+  <h2>c. Verbotene Aussagen &amp; Versprechen</h2>
+  <div class="dd">
+    <div class="dont-box" style="grid-column:1/-1"><h4>Diese Aussagen sind verboten</h4><ul>
+      <li>Garantien, die nicht garantiert sind</li>
+      <li>Aussagen wie „beste Lösung“, „immer die richtige Wahl“</li>
+      <li>Renditeversprechen jeglicher Art</li>
+      <li>Spekulationen ohne Datenbasis</li>
+      <li>Aussagen die nicht faktisch korrekt &amp; nachweisbar sind</li>
+    </ul></div>
+  </div>
+
+  <h2>d. Verhaltensrichtlinien im Markt</h2>
+  <table>
+    <tr><th>Bereich</th><th>Erlaubt</th><th>Nicht erlaubt</th></tr>
+    <tr><td><strong>Kunden</strong></td><td>Transparent, ehrlich, professionell · Erwartungen realistisch setzen</td><td>Übertreibungen · ungesicherte Behauptungen</td></tr>
+    <tr><td><strong>Mitbewerber</strong></td><td>Neutral vergleichen · Fakten statt Meinung</td><td>Schlechtreden · Abwertung · aggressive Argumentation</td></tr>
+    <tr><td><strong>Social Media</strong></td><td>Professionelles Networking · Lifestyle mit Mehrwert · eigene Ergebnisse (seriös)</td><td>Screenshots von Provisionsabrechnungen · Kundendaten · irreführende Werbung · Materialismus</td></tr>
+  </table>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 19</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 21 – Abschluss &#8594;</button>
+  </div>
+</div>
+
+<!-- ══ 21: ABSCHLUSS ══ -->
+<div class="chapter" id="ch-21">
+  <div class="chap-label">Kapitel 21 · Abschluss</div>
+  <div class="chap-title">Abschlussworte</div>
+  <div class="chap-lead">Für deinen Weg. Für deine Zukunft. Für das, was du daraus machst.</div>
+
+  <p>Wenn du bis hierhin gelesen hast, dann weißt du eines ganz sicher: Du stehst am Anfang eines Weges, der größer ist als ein Beruf, größer als ein Titel und größer als jede einzelne Aufgabe dieser Mappe. Du stehst am Anfang deiner eigenen Geschichte.</p>
+  <p>Vielleicht fühlt sich manches noch neu an. Vielleicht ist Vieles aufregend, manches herausfordernd. Aber genau das macht diesen Weg so besonders: Hier wächst du mit jeder Entscheidung, mit jedem Termin, mit jedem Schritt, den du mutig weitergehst.</p>
+  <p>Diese Einarbeitungsmappe zeigt dir Strukturen, Regeln, Werkzeuge und Erwartungen — doch das Wichtigste, das Entscheidende, das Ausschlaggebende… bringst du selbst mit: deine Persönlichkeit, dein Warum, deinen Hunger nach mehr.</p>
+  <p>Denn am Ende geht es nicht nur darum: besser zu werden, erfolgreicher zu werden, finanziell frei zu werden. Es geht darum, die <strong>beste Version von dir selbst</strong> zu formen. Eine Version, die stolz macht — dich selbst, deine Familie, all die Menschen, die an dich glauben.</p>
+  <p>Du wirst Momente erleben, in denen du wächst. Momente, in denen du zweifelst. Momente, in denen du über dich hinauswächst. Und genau diese Momente formen dich als Unternehmer, als Berater, als Mensch.</p>
+
+  <div class="note note-pink"><strong>Egal, wo du heute stehst:</strong> In zwei Jahren kannst du an einem Ort sein, den du dir heute vielleicht nicht einmal vorstellen kannst. Du musst dafür nur eines tun: Dranbleiben.</div>
+
+  <p>Nicht perfekt sein. Nicht alles wissen. Sondern: lernen, machen, umsetzen, entwickeln — Schritt für Schritt.</p>
+  <p>Und das Schöne ist: Du gehst diesen Weg nicht allein. Wir gehen ihn gemeinsam. Mit einem Team, das zusammenhält. Mit Menschen, die an dich glauben. Mit einer Kultur, die nicht verurteilt, sondern stärkt. Mit Führungskräften, die nicht über dir stehen — sondern hinter dir.</p>
+
+  <div class="quote">
+    <p>Diese Mappe endet hier. Dein Weg beginnt jetzt. Danke für dein Vertrauen. Danke für deinen Mut. Danke, dass du dich entschieden hast, diesen Weg zu gehen. Ich freue mich auf alles, was wir gemeinsam erreichen.</p>
+    <div class="quote-source">Kim Hung Dao &amp; Führungskräfte</div>
+  </div>
+
+  <h2>Dein 2-Jahres-Ziel – Reflexionsraum</h2>
+  <table>
+    <tr><th>Ziel</th><th>Deine Antwort</th></tr>
+    <tr><td>Monatliches Einkommensziel nach 24 Monaten</td><td><input style="border:none;outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px" placeholder="€ ___________" oninput="save('z1',this.value)" id="z1-input"></td></tr>
+    <tr><td>Karrierestufe nach 24 Monaten</td><td><input style="border:none;outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px" placeholder="Position: ___________" oninput="save('z2',this.value)" id="z2-input"></td></tr>
+    <tr><td>Teamaufbauziel</td><td><input style="border:none;outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px" placeholder="X direkte VPs" oninput="save('z3',this.value)" id="z3-input"></td></tr>
+    <tr><td>Dein persönliches WHY (kurz)</td><td><input style="border:none;outline:none;width:100%;font-family:'DM Sans',sans-serif;font-size:13px" placeholder="Ich mache das weil..." oninput="save('z4',this.value)" id="z4-input"></td></tr>
+  </table>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 20</button>
+    <button class="chap-nav-btn chap-nav-next" onclick="navChap(1)">Kapitel 22 – Notizen &#8594;</button>
+  </div>
+</div>
+
+<!-- ══ 22: NOTIZEN ══ -->
+<div class="chapter" id="ch-22">
+  <div class="chap-label">Kapitel 22 · Abschluss</div>
+  <div class="chap-title">Notizen</div>
+  <div class="chap-lead">Dein persönlicher Platz für Gedanken, Erkenntnisse und alles, was dir während deiner Einarbeitung wichtig erscheint.</div>
+
+  <div class="card">
+    <div class="card-title">Meine Notizen</div>
+    <textarea class="reflex" style="min-height:400px" id="notizen-text" oninput="save('notizen',this.value)" placeholder="Schreibe hier deine Gedanken, Fragen, Erkenntnisse, Ideen oder alles was dir während deiner Einarbeitung wichtig erscheint..."></textarea>
+    <p style="font-size:11px;color:var(--muted);margin-top:6px">Wird automatisch gespeichert – nur für dich sichtbar</p>
+  </div>
+
+  <div class="chap-nav">
+    <button class="chap-nav-btn" onclick="navChap(-1)">&#8592; Kapitel 21</button>
+    <button class="chap-nav-btn" onclick="goTo(0)">Zum Inhaltsverzeichnis</button>
+  </div>
+</div>
+
+</main>
+
+<script>
+var cur=0,total=23;
+var chapters=['Inhaltsverzeichnis','Willkommen','Vorstellung','Buchempfehlungen','Vision Board','Persönlichkeitsentwicklung','Unsere Standorte','Wichtige Termine','Erwartungshaltung','Selbstständigkeit','Vision &amp; Werte','Kultur','Unternehmerbasics','Geschäftsplan','Systemeinrichtung','Das tecis-System','IHK §34d &amp; §34f','Performance','Benchmark 2 Jahre','Zieldefinition','Compliance &amp; Haftung','Abschlussworte','Notizen'];
+
+function goTo(n){
+  document.querySelectorAll('.chapter').forEach(function(c){c.classList.remove('visible')});
+  var target=document.getElementById('ch-'+n);
+  if(target) target.classList.add('visible');
+  document.querySelectorAll('.sb-item').forEach(function(i,idx){i.classList.toggle('active',idx===n)});
+  document.getElementById('tb-chapter').innerHTML=chapters[n]||'';
+  document.getElementById('tb-prog').textContent=(n+1)+' / '+total;
+  document.getElementById('btn-prev').disabled=n===0;
+  document.getElementById('btn-next').disabled=n===total-1;
+  cur=n;
+  window.scrollTo(0,0);
+  if(n===18)renderCl();
+}
+
+function navChap(d){goTo(Math.max(0,Math.min(total-1,cur+d)))}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+function toggleAcc(id){var el=document.getElementById(id);if(el)el.classList.toggle('open')}
+
+// ── SAVE / LOAD ──
+function save(k,v){try{localStorage.setItem('teb_'+k,v);}catch(e){}}
+function load(k){try{return localStorage.getItem('teb_'+k)||'';}catch(e){return '';}}
+
+var allTextFields = [
+  'why-text','vision-text','notizen-text',
+  'zi1','zi2','zi3','zi4','zi5','zi6','zi7','zi8','zi9','zi10','zi11',
+  'zk1','zk2','zk3','zk4','zk5','zk6','zk7','zk8','zk9',
+  'zt1','zt2','zt3','zt4','zt5','zt6','zt7','zt8','zt9','zt10','zt11','zt12',
+  'zw1','zw2','zw3','zw4','zw5','zw6','zw7',
+  'zf1','zf2','zf3','zf4',
+  'z1-input','z2-input','z3-input','z4-input'
+];
+
+function loadAll(){
+  allTextFields.forEach(function(id){
+    var el=document.getElementById(id);
+    if(!el) return;
+    var key = id.replace('-input','').replace('-text','');
+    var v = load(key) || load(id);
+    if(v) el.value=v;
+  });
+  renderCl();
+}
+
+// ── CHECKLISTEN (Kapitel 12 - Unternehmerbasics) ──
+var clData={1:Array(8).fill(false),2:Array(8).fill(false)};
+function loadCl(){try{var d=localStorage.getItem('teb_cl');if(d)clData=JSON.parse(d);}catch(e){}}
+function saveCl(){try{localStorage.setItem('teb_cl',JSON.stringify(clData));}catch(e){}}
+function toggleCl(list,idx){clData[list][idx]=!clData[list][idx];saveCl();renderCl();}
+function renderCl(){
+  [1,2].forEach(function(l){
+    var data=clData[l];
+    var done=data.filter(Boolean).length;
+    data.forEach(function(v,i){
+      var box=document.getElementById('c'+l+'-'+i);
+      var txt=document.getElementById('c'+l+'-'+i+'t');
+      if(box)box.className='cl-check'+(v?' done':'');
+      if(txt)txt.className='cl-text'+(v?' done':'');
+    });
+    var bar=document.getElementById('cl'+l+'-bar');
+    var pct=document.getElementById('cl'+l+'-pct');
+    if(bar)bar.style.width=(done/data.length*100)+'%';
+    if(pct)pct.textContent=done+' von '+data.length+' erledigt';
+  });
+}
+
+document.addEventListener('DOMContentLoaded',function(){loadCl();loadAll();});
+</script>
+</body>
+</html>
